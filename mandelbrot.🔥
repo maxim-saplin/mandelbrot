@@ -1,3 +1,7 @@
+# VMWare, Ubuntu, Intel® Core™ i5-8257U CPU @ 1.40GHz × 2
+# mojo mandelbrot.🔥
+# 0,32 sec
+
 from complex import ComplexFloat64
 from tensor import Tensor
 from math import abs
@@ -49,6 +53,7 @@ fn mandelbrot_0(c: ComplexFloat64) -> Int:
 
 fn mandelbrot() -> Array[Int]:
     let output = Array[Int](width*height)
+
     for h in range(height):
         let cy = min_y + h * scaley
         for w in range(width):
@@ -64,6 +69,10 @@ fn main():
       let x = mandelbrot()
       let end_time = now()
       let execution_time = end_time - start_time
+
+      var s = 0;
+      for h in range(height):
+        for w in range(width):
+          s += x[width*h+0]
       print("Execution Time:", execution_time/1000/1000/1000)
-      # for h in range(height):
-      #     print(x[width*h+0])
+      print(s); # I need to output s since itherwise Mojo removes any calls to mandelbrot()

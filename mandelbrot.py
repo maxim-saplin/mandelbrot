@@ -1,19 +1,22 @@
+# VMWare, Ubuntu, Intel® Core™ i5-8257U CPU @ 1.40GHz × 2
+# 10.8 sec
+
 import time
 import numpy as np
 
-height:int = 1024
-width:int = 1024
-min_x:float = -2.0
-max_x:float = 0.47
-min_y:float = -1.12
-max_y:float = 1.12
-scalex:float = (max_x - min_x) / width
-scaley:float = (max_y - min_y) / height
+height = 1024
+width = 1024
+min_x = -2.0
+max_x = 0.47
+min_y = -1.12
+max_y = 1.12
+scalex = (max_x - min_x) / width
+scaley = (max_y - min_y) / height
 MAX_ITERS = 256
 
 def mandelbrot_0(c: complex) -> int:
     z = c
-    nv:int = 0
+    nv = 0
     for i in range(1, MAX_ITERS):
       if abs(z) > 2:
         break
@@ -24,9 +27,9 @@ def mandelbrot_0(c: complex) -> int:
 def mandelbrot():
     output = np.empty((height, width), dtype=np.int32)
     for h in range(height):
-        cy:float = min_y + h * scaley
+        cy = min_y + h * scaley
         for w in range(width):
-            cx:float = min_x + w * scalex
+            cx = min_x + w * scalex
             output[h,w] = mandelbrot_0(complex(cx,cy))
     return output
 

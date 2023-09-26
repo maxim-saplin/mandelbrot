@@ -2,17 +2,20 @@ import time
 import numpy as np
 import numba as numba
 
-height:int = 1024
-width:int = 1024
-min_x:float = -2.0
-max_x:float = 0.47
-min_y:float = -1.12
-max_y:float = 1.12
-scalex:float = (max_x - min_x) / width
-scaley:float = (max_y - min_y) / height
+height = 1024
+width = 1024
+min_x = -2.0
+max_x = 0.47
+min_y = -1.12
+max_y = 1.12
+scalex = (max_x - min_x) / width
+scaley = (max_y - min_y) / height
 MAX_ITERS = 256
 
-@numba.njit
+# njit - 0.68 sec
+# njit(fastmath=True) - 0.64 sec
+
+@numba.njit(fastmath=True)
 def mandelbrot_0(c: complex) -> int:
     z = c
     nv:int = 0
@@ -23,13 +26,13 @@ def mandelbrot_0(c: complex) -> int:
       nv += 1
     return nv
 
-@numba.njit
+@numba.njit(fastmath=True)
 def mandelbrot():
     output = np.empty((height, width), dtype=np.int32)
     for h in range(height):
-        cy:float = min_y + h * scaley
+        cy = min_y + h * scaley
         for w in range(width):
-            cx:float = min_x + w * scalex
+            cx = min_x + w * scalex
             output[h,w] = mandelbrot_0(complex(cx,cy))
     return output
 

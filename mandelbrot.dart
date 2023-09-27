@@ -3,6 +3,7 @@
 // dart mandelbrot.dart               - Unit32List,  0,60 - 0,64 sec
 // dart mandelbrot.dart               - Unit32List,  0,44 - 0,46 sec
 
+import 'dart:io';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
@@ -43,13 +44,17 @@ Uint32List mandelbrot() {
 
 void main() {
   for (int i = 0; i < 3; i++) {
-    print('${i + 1} ');
+    stdout.write('${i + 1} ');
     DateTime start_time = DateTime.now();
     var result = mandelbrot();
     DateTime end_time = DateTime.now();
     Duration execution_time = end_time.difference(start_time);
-    print(
-        'Execution Time: ${execution_time.inMilliseconds.toDouble() / 1000.0}');
+    stdout.write(
+        ' Execution Time: ${execution_time.inMilliseconds.toDouble() / 1000.0}');
+    // Calculate the sum of all elements in the result list
+
+    int sum = result.reduce((value, element) => value + element);
+    stdout.writeln('                       $sum');
   }
 }
 

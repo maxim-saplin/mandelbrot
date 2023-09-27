@@ -1,3 +1,8 @@
+# VMWare, Ubuntu, Intel® Core™ i5-8257U CPU @ 1.40GHz × 2
+# njit - 0.68 sec, sum_result 78513425
+# njit(fastmath=True) - 0.64 sec, twhen True the sum_result check is failed, different value (78513473) 
+# skipping 1st run as it is cold start for JIT, taking last 3
+
 import time
 import numpy as np
 import numba as numba
@@ -12,10 +17,7 @@ scalex = (max_x - min_x) / width
 scaley = (max_y - min_y) / height
 MAX_ITERS = 256
 
-# njit - 0.68 sec
-# njit(fastmath=True) - 0.64 sec
-
-@numba.njit(fastmath=True)
+@numba.njit(fastmath=False)
 def mandelbrot_0(c: complex) -> int:
     z = c
     nv:int = 0
@@ -26,7 +28,7 @@ def mandelbrot_0(c: complex) -> int:
       nv += 1
     return nv
 
-@numba.njit(fastmath=True)
+@numba.njit(fastmath=False)
 def mandelbrot():
     output = np.empty((height, width), dtype=np.int32)
     for h in range(height):
@@ -40,7 +42,10 @@ def mandelbrot():
 for i in range(4):
     print(i+1, end=' ', flush=True)
     start_time = time.time()
-    mandelbrot()
+    result = mandelbrot()
     end_time = time.time()
     execution_time = end_time - start_time
-    print("Execution Time:", execution_time)
+    print("Execution Time:", execution_time, end=' ')
+
+    sum_result = np.sum(result)
+    print("                 ", sum_result)

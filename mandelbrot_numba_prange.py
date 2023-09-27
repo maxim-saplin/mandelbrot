@@ -1,9 +1,12 @@
-# sum 78513425
 # VMWare, Ubuntu, Intel® Core™ i5-8257U CPU @ 1.40GHz × 2
-# 10.8 sec
+# njit - 0.68 sec, sum_result 78513425
+# njit(fastmath=True) - 0.64 sec, sum_result 78513473
+# njit(fastmath=False, parallel=True), prange() - 0,38 sec, sum_result  78513425
+# njit(fastmath=True, parallel=True), prange() - 0,38 sec, sum_result 78513473
 
 import time
 import numpy as np
+import numba as numba
 
 height = 1024
 width = 1024
@@ -15,9 +18,10 @@ scalex = (max_x - min_x) / width
 scaley = (max_y - min_y) / height
 MAX_ITERS = 256
 
+@numba.njit(fastmath=True)
 def mandelbrot_0(c: complex) -> int:
     z = c
-    nv = 0
+    nv:int = 0
     for i in range(1, MAX_ITERS):
       if abs(z) > 2:
         break
@@ -25,17 +29,18 @@ def mandelbrot_0(c: complex) -> int:
       nv += 1
     return nv
 
+@numba.njit(fastmath=True, parallel=True)
 def mandelbrot():
     output = np.empty((height, width), dtype=np.int32)
-    for h in range(height):
+    for h in numba.prange(height):
         cy = min_y + h * scaley
-        for w in range(width):
+        for w in numba.prange(width):
             cx = min_x + w * scalex
             output[h,w] = mandelbrot_0(complex(cx,cy))
     return output
 
 
-for i in range(3):
+for i in range(4):
     print(i+1, end=' ', flush=True)
     start_time = time.time()
     result = mandelbrot()
@@ -45,4 +50,3 @@ for i in range(3):
 
     sum_result = np.sum(result)
     print("                 ", sum_result)
-    

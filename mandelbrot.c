@@ -1,3 +1,4 @@
+// sum 79394478
 // VMWare, Ubuntu, Intel® Core™ i5-8257U CPU @ 1.40GHz × 2
 // gcc -o mandelbrot mandelbrot.c          - 0,69 
 // gcc -o mandelbrot mandelbrot.c -O3      - 0,32 
@@ -55,7 +56,13 @@ int main() {
         int* result = mandelbrot();
         clock_t end_time = clock();
         double execution_time = (double)(end_time - start_time) / CLOCKS_PER_SEC;
-        printf("Execution Time: %lf\n", execution_time);
+        printf("Execution Time: %lf", execution_time);
+
+        int sum = 0;
+        for (int i = 0; i < height * width; i++) {
+            sum += result[i];
+        }
+        printf("           %d\n", sum);
 
         // Free allocated memory
         free(result);

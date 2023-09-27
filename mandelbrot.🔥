@@ -1,3 +1,4 @@
+# sum 78513383
 # VMWare, Ubuntu, Intel® Core™ i5-8257U CPU @ 1.40GHz × 2
 # mojo mandelbrot.🔥
 # 0,32 sec
@@ -73,6 +74,6 @@ fn main():
       var s = 0;
       for h in range(height):
         for w in range(width):
-          s += x[width*h+0]
+          s += x[width*h+w]
       print_no_newline(" Execution Time:", execution_time/1000/1000/1000)
-      print('\t\t',s); # I need to output s since itherwise Mojo removes any calls to mandelbrot()
+      print('\t\t', s); # I need to output s since itherwise Mojo removes any calls to mandelbrot()

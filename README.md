@@ -9,7 +9,7 @@ Ubuntu 22.04.3 LTS, 64 bit, Intel Core i5-8257U @ 1.4GHz x 2, VMWare Workstation
 | Python + Numba (fastmath) | 0,64           | 3.11.15 | 78513473  | Different sum |
 | Python + Numba (prange)   | 0,38           | 3.11.15 | 78513425  | Parallel/MT   |
 | JavaScript (Bun)          | 0,90           | 1.0.3   | 78513425  |               |
-| JavaScrip                 | 0,82           | 12.22.9 | 78513425  |               |
+| JavaScript (node)         | 0,82           | 12.22.9 | 78513425  |               |
 | Go (go build)             | 0,69           | 1.21.1  | 78513478  | Different sum |
 | Go (go run)               | 0,54           | 1.21.1  | 78513415  | Different sum |
 | Dart (VM, JIT)            | 0,64           | 3.1.0   | 78513425  |               |

@@ -23,7 +23,7 @@ namespace ConsoleApp
             {
                 double zReNew = zRe * zRe - zIm * zIm + cRe;
                 double zImNew = 2.0 * zRe * zIm + cIm;
-                if (zReNew * zReNew + zImNew * zImNew > 4.0)
+                if (Math.Sqrt(zReNew * zReNew + zImNew * zImNew) > 2.0)
                 {
                     break;
                 }

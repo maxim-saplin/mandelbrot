@@ -4,8 +4,8 @@ Ubuntu 22.04.3 LTS, 64 bit, Intel Core i5-8257U @ 1.4GHz x 2, VMWare Workstation
 
 | Language/variant          | Time (seconds) | Version | Sum check | Comment       |
 |---------------------------|----------------|---------|-----------|---------------|
-| Python                    | 10,8           | 3.11.15 | 78513425  |               |
-| Python + Numba            | 0,68           | 3.11.15 | 78513425  |               |
+| Python + NumPy            | 10,8           | 3.11.15 | 78513425  |               |
+| Python + NP + Numba       | 0,68           | 3.11.15 | 78513425  |               |
 | Python + Numba (fastmath) | 0,64           | 3.11.15 | 78513473  | Different sum |
 | Python + Numba (prange)   | 0,38           | 3.11.15 | 78513425  | Parallel/MT   |
 | JavaScript (Bun)          | 0,90           | 1.0.3   | 78513425  |               |

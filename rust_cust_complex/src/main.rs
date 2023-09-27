@@ -13,14 +13,34 @@ const SCALEX: f64 = (MAX_X - MIN_X) / WIDTH as f64;
 const SCALEY: f64 = (MAX_Y - MIN_Y) / HEIGHT as f64;
 const MAX_ITERS: usize = 256;
 
-fn mandelbrot_0(c: num_complex::Complex<f64>) -> usize {
+impl Complex {
+    fn add(self, other: Complex) -> Complex {
+        Complex {
+            real: self.real + other.real,
+            imag: self.imag + other.imag,
+        }
+    }
+
+    fn mul(self, other: Complex) -> Complex {
+        Complex {
+            real: self.real * other.real - self.imag * other.imag,
+            imag: self.real * other.imag + self.imag * other.real,
+        }
+    }
+
+    fn norm(&self) -> f64 {
+        (self.real * self.real + self.imag * self.imag).sqrt()
+    }
+}
+
+fn mandelbrot_0(c: Complex) -> usize {
     let mut z = c;
     let mut nv = 0;
     for _ in 1..MAX_ITERS {
         if z.norm() > 2.0 {
             break;
         }
-        z = z * z + c;
+        z = z.mul(z).add(c);
         nv += 1;
     }
     nv

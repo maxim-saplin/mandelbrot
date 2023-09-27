@@ -1,4 +1,10 @@
+// dart mandelbrot.dart               - 0,62 - 0,70 sec
+// dart compile exe mandelbrot.dart   - 0,42 sec
+// dart mandelbrot.dart               - Unit32List,  0,60 - 0,64 sec
+// dart mandelbrot.dart               - Unit32List,  0,44 - 0,46 sec
+
 import 'dart:math' as math;
+import 'dart:typed_data';
 
 const int height = 1024;
 const int width = 1024;
@@ -23,13 +29,13 @@ int mandelbrot_0(Complex c) {
   return nv;
 }
 
-List<List<int>> mandelbrot() {
-  List<List<int>> output = List.generate(height, (i) => List<int>.filled(width, 0));
+Uint32List mandelbrot() {
+  var output = Uint32List(width * height);
   for (int h = 0; h < height; h++) {
     double cy = min_y + h * scaley;
     for (int w = 0; w < width; w++) {
       double cx = min_x + w * scalex;
-      output[h][w] = mandelbrot_0(Complex(cx, cy));
+      output[h * width + w] = mandelbrot_0(Complex(cx, cy));
     }
   }
   return output;
@@ -39,10 +45,11 @@ void main() {
   for (int i = 0; i < 3; i++) {
     print('${i + 1} ');
     DateTime start_time = DateTime.now();
-    List<List<int>> result = mandelbrot();
+    var result = mandelbrot();
     DateTime end_time = DateTime.now();
     Duration execution_time = end_time.difference(start_time);
-    print('Execution Time: ${execution_time.inMilliseconds.toDouble() / 1000.0}');
+    print(
+        'Execution Time: ${execution_time.inMilliseconds.toDouble() / 1000.0}');
   }
 }
 

@@ -1,3 +1,5 @@
+Benchmarking several langueges/tools with Mandelbrot set generation. No SIMD, no multithreading (except prange() trick with Numba), just 1-to-1 translation of code from one languages to another. No tricks (e.g. skipping sqrt, changing the algorythm) and hardcoer tailoring of code, just a minimum of language specific adjustment to make the code nicer while keeping all loops and operations in place.
+
 Ubuntu 22.04.3 LTS, 64 bit, Intel Core i5-8257U @ 1.4GHz x 2, VMWare Workstation Player 17.0.1
 
 | Language/variant          | Time (seconds) | Version | Sum check | Comment       |

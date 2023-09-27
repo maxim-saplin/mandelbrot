@@ -13,6 +13,12 @@ const SCALEX: f64 = (MAX_X - MIN_X) / WIDTH as f64;
 const SCALEY: f64 = (MAX_Y - MIN_Y) / HEIGHT as f64;
 const MAX_ITERS: usize = 256;
 
+#[derive(Clone, Copy)]
+struct Complex {
+    real: f64,
+    imag: f64,
+}
+
 impl Complex {
     fn add(self, other: Complex) -> Complex {
         Complex {
@@ -52,7 +58,7 @@ fn mandelbrot() -> Vec<Vec<usize>> {
         let cy = MIN_Y + (h as f64) * SCALEY;
         for w in 0..WIDTH {
             let cx = MIN_X + (w as f64) * SCALEX;
-            output[h][w] = mandelbrot_0(num_complex::Complex::new(cx, cy));
+            output[h][w] = mandelbrot_0(Complex{real: cx, imag: cy});
         }
     }
     output

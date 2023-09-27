@@ -36,7 +36,7 @@ namespace ConsoleApp
             return nv;
         }
 
-        private static void Mandelbrot()
+        private static int[] Mandelbrot()
         {
             var output = new int[Height * Width];
             for (int h = 0, idx = 0; h < Height; h++, idx += Width)
@@ -48,6 +48,7 @@ namespace ConsoleApp
                     output[idx + w] = Mandelbrot_0(cx, cy);
                 }
             }
+            return output;
         }
 
 
@@ -59,10 +60,18 @@ namespace ConsoleApp
                 Console.Out.Flush();
                 var stopWatch = new System.Diagnostics.Stopwatch();
                 stopWatch.Start();
-                Mandelbrot();
+                var result = Mandelbrot();
                 stopWatch.Stop();
                 var executionTime = stopWatch.Elapsed;
-                Console.WriteLine("Execution Time: {0}", executionTime);
+                Console.Write("Execution Time: {0}", (double)(executionTime.Milliseconds)/1000);
+
+                int sum = 0;
+                for (int j = 0; j < result.Length; j++)
+                {
+                    sum += result[j];
+                }
+
+                Console.WriteLine("                    " + sum);
             }
         }
     }

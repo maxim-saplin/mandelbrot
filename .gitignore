@@ -162,3 +162,5 @@ cython_debug/
 mandelbrot
 
 mandelbrot.exe
+
+mandelbrot-optimized

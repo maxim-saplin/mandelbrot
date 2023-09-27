@@ -14,6 +14,8 @@ Ubuntu 22.04.3 LTS, 64 bit, Intel Core i5-8257U @ 1.4GHz x 2, VMWare Workstation
 | Rust + custom Complex     | 0,32           | 1.72.1  | 78513425  |               |
 | C# (JIT)                  | 0,37           | 7.0.111 | 78513425  |               |
 | C# (AoT)                  | 0,33           | 7.0.111 | 78513425  |               |
+| Go (go build)             | 0,69           | 1.21.1  | 78513478  | Different sum |
+| Go (go run)               | 0,54           | 1.21.1  | 78513415  | Different sum |
 | Mojo                      | 0,32           | 0.2.1   | 78513383  | Different sum |
 | gcc                       | 0,69           | 11.4.0  | 78513478  | Different sum |
 | gcc (-O3)                 | 0,32           | 11.4.0  | 78513478  | Different sum |

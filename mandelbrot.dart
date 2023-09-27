@@ -57,7 +57,7 @@ class Complex {
   final double re;
   final double im;
 
-  Complex(this.re, this.im);
+  const Complex(this.re, this.im);
 
   Complex operator +(Complex other) {
     return Complex(re + other.re, im + other.im);

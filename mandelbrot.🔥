@@ -64,7 +64,7 @@ fn mandelbrot() -> Array[Int]:
 
 fn main():
   for i in range(3):
-      print(i+1)
+      print_no_newline(i+1)
       let start_time = now()
       let x = mandelbrot()
       let end_time = now()
@@ -74,5 +74,5 @@ fn main():
       for h in range(height):
         for w in range(width):
           s += x[width*h+0]
-      print("Execution Time:", execution_time/1000/1000/1000)
-      print(s); # I need to output s since itherwise Mojo removes any calls to mandelbrot()
+      print_no_newline(" Execution Time:", execution_time/1000/1000/1000)
+      print('\t\t',s); # I need to output s since itherwise Mojo removes any calls to mandelbrot()

@@ -1,4 +1,7 @@
-// gcc -o mandelbrot mandelbrot.c -lm ./mandelbrot
+// VMWare, Ubuntu, Intel® Core™ i5-8257U CPU @ 1.40GHz × 2
+// gcc -o mandelbrot mandelbrot.c          - 0,69 
+// gcc -o mandelbrot mandelbrot.c -O3      - 0,32 
+// gcc -o mandelbrot mandelbrot.c -Ofast   - 0,29 sec
 
 #include <stdio.h>
 #include <stdlib.h>

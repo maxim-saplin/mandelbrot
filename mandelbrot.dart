@@ -1,3 +1,4 @@
+// sum 78513425
 // dart mandelbrot.dart               - 0,62 - 0,70 sec
 // dart compile exe mandelbrot.dart   - 0,42 sec
 // dart mandelbrot.dart               - Unit32List,  0,60 - 0,64 sec

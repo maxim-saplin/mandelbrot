@@ -28,3 +28,5 @@ Ubuntu 22.04.3 LTS, 64 bit, Intel Core i5-8257U @ 1.4GHz x 2, VMWare Workstation
 | gcc                       | 0,69           | 11.4.0  | 78513478  | Different sum |
 | gcc (-O3)                 | 0,32           | 11.4.0  | 78513478  | Different sum |
 | gcc (-Ofast)              | 0,29           | 11.4.0  | 78513478  | Different sum |
+
+More on Python and Mojo: https://dev.to/maximsaplin/mojo-head-to-head-with-python-and-numba-5bn9

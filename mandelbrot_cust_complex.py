@@ -1,7 +1,6 @@
 # VMWare, Ubuntu, Intel® Core™ i5-8257U CPU @ 1.40GHz × 2
-# Pure Python - 
-# njit - 
-# njit(fastmath=True) -
+# Pure Python - 1672 sec (~27 min)
+# njit - 8,3 sec
 # njit(fastmath=True), parallel - 4.4 sec, sum 78513383 
 # Numba, skipping 1st iteration in eval (cold JIT start)
 

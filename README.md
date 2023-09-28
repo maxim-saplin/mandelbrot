@@ -1,4 +1,4 @@
-Benchmarking several langueges/tools with Mandelbrot set generation. No SIMD, no multithreading (except prange() trick with Numba), just 1-to-1 translation of code from one languages to another. No tricks (e.g. skipping sqrt, changing the algorythm) and hardcoer tailoring of code, just a minimum of language specific adjustment to make the code nicer while keeping all loops and operations in place.
+Benchmarking several langueges/tools with Mandelbrot set generation. No SIMD, no multithreading (except prange() trick with Numba), just 1-to-1 translation of code from one language to another. No tricks (e.g. skipping sqrt, changing the algorythm) and hardcore tailoring of code, bare minimum of language specific adjustments to make the code nicer while keeping all loops and operations in place.
 
 Sum check column shows the result of calculating the total sum of numbers in the array produced by `mandelbrot()` mthod. It demonstrates how there can be slight variations (+/-0,1%) in different languages and compiler settings dues to differences in floating point math utilized.
 

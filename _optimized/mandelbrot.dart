@@ -1,6 +1,10 @@
+// V1 Original
 // M1 Pro, sum 78513425
 // dart mandelbrot.dart - Avg: 478.0ms, StdDev: 0.4626%
 // dart compile exe mandelbrot.dart - Avg: 256.2ms, StdDev: 0.1646%
+// Intel, sum 78513425
+// dart mandelbrot.dart - Avg: 614.0ms, StdDev: 2.7101%
+// dart compile exe mandelbrot.dart - Avg: 451.3ms, StdDev: 1.7418%
 
 import 'dart:io';
 import 'dart:math' as math;

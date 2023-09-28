@@ -173,3 +173,7 @@ csharp_no_complex/bin/Debug/net7.0/
 csharp_no_complex/bin/Release/net7.0/
 
 csharp_no_complex/obj/
+
+csharp_cust_complex/bin/Release/net7.0/
+
+csharp_cust_complex/obj/

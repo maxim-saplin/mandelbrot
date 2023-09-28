@@ -1,13 +1,13 @@
-// go run mandelbrot.go
-// complex128 0,54 sec, sum 78513415
-// go build -ldflags="-s -w" -o mandelbrot-optimized mandelbrot.go
-// complex128 0,69 sec, sum 79394478
+// go run mandelbrot_cust_complex.go
+// Complex64 0,35 sec, sum 78513415
+// go build -ldflags="-s -w" -o mandelbrot-optimized mandelbrot_cust_complex.go
+// Complex64 0,35 sec, sum 78513415
 
 package main
 
 import (
 	"fmt"
-	"math/cmplx"
+	"math"
 	"time"
 )
 

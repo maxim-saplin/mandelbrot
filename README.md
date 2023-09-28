@@ -1,4 +1,4 @@
-Benchmarking several languages/tools with Mandelbrot set generation. No SIMD, no multithreading (except prange() trick with Numba), just 1-to-1 translation of code from one language to another. No tricks (e.g. skipping sqrt, changing the algorythm) and hardcore tailoring of code, bare minimum of language specific adjustments to make the code nicer while keeping all loops and operations in place.
+Benchmarking several languages/tools with Mandelbrot set generation. 1-to-1 translation of code from one language to another. No SIMD, no multithreading (except prange() trick with Numba), no tricks (e.g. skipping sqrt), a bare minimum of language specific adjustments to make the code nicer while keeping all loops and operations in place.
 
 By default using int32 and float64 (where possible, i.e. in Dart all integers are 64 bit, Go comes with 128 bit Complex struct). 
 

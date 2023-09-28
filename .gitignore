@@ -166,3 +166,4 @@ mandelbrot.exe
 mandelbrot-optimized
 
 csharp/obj/Debug/net7.0/
+csharp_cust_complex/.DS_Store

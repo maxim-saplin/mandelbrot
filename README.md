@@ -17,8 +17,8 @@ Ubuntu 22.04.3 LTS, 64 bit, Intel Core i5-8257U @ 1.4GHz x 2, VMWare Workstation
 | Python+w/o NP+Numba(prng) | 0,19           | 3.11.15 | 78513473  | Diff, fst, prl|
 | JavaScript (Bun)          | 0,90           | 1.0.3   | 78513425  |               |
 | JavaScript (Node)         | 0,82           | 12.22.9 | 78513425  |               |
-| Go (go build)             | 0,69           | 1.21.1  | 78513478  | Different sum |
-| Go (go run)               | 0,54           | 1.21.1  | 78513415  | Different sum |
+| Go (go build) +Complex128 | 0,69           | 1.21.1  | 78513478  | Different sum |
+| Go (go run) +Complex128   | 0,54           | 1.21.1  | 78513415  | Different sum |
 | Dart (VM, JIT)            | 0,64           | 3.1.0   | 78513425  |               |
 | Dart (AoT)                | 0,42           | 3.1.0   | 78513425  |               |
 | Rust + num-complex        | 0,73           | 1.72.1  | 78513425  |               |

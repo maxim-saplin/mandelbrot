@@ -1,5 +1,6 @@
 // bun mandelbrot.js - 0,9 sec, sum 78513425
 // node mandelbrot.js - 0,82 sec, sum 78513425
+// FireFox 118.0.1 - 2,8 sec
 
 
 const height = 1024;

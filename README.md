@@ -2,6 +2,8 @@ Benchmarking several langueges/tools with Mandelbrot set generation. No SIMD, no
 
 By default using int32 and float64 (where possible, i.e. in Dart all integers are 64 bit). 
 
+Sum check column shows the result of calculating the total sum of numbers in the array produced by `mandelbrot()` mthod. It demonstrates how there can be slight variations (+/-0,1%) in different languages and compiler settings dues to differences in floating point math utilized.
+
 Ubuntu 22.04.3 LTS, 64 bit, Intel Core i5-8257U @ 1.4GHz x 2, VMWare Workstation Player 17.0.1
 
 | Language/variant          | Time (seconds) | Version | Sum check | Comment       |

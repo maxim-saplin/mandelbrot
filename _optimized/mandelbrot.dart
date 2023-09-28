@@ -3,6 +3,14 @@
 // dart mandelbrot.dart - Avg: 251.1ms, StdDev: 0.2939%
 // dart compile exe mandelbrot.dart - Avg: 251.3ms, StdDev: 0.3276%
 
+// V2, No Complex, No func, UintList
+// M1 Pro, sum 78513425
+// dart mandelbrot.dart - Avg: 251.1ms, StdDev: 0.2939%
+// dart compile exe mandelbrot.dart - Avg: 251.3ms, StdDev: 0.3276%
+// Intel, sum 78513425
+// dart mandelbrot.dart - Avg: 298.3ms, StdDev: 1.9930%
+// dart compile exe mandelbrot.dart - Avg: 295.6ms, StdDev: 0.9856%
+
 // V1 Original
 // M1 Pro, sum 78513425
 // dart mandelbrot.dart - Avg: 478.0ms, StdDev: 0.4626%

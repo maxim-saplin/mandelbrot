@@ -1,8 +1,8 @@
 # VMWare, Ubuntu, Intel® Core™ i5-8257U CPU @ 1.40GHz × 2
 # Pure Python - 
 # njit - 
-# njit(fastmath=True) 
-# njit(fastmath=True), parallel - 
+# njit(fastmath=True) -
+# njit(fastmath=True), parallel - 4.4 sec, sum 78513383 
 # Numba, skipping 1st iteration in eval (cold JIT start)
 
 import time
@@ -44,7 +44,7 @@ class Complex:
         return sqrt(self.real ** 2 + self.imag ** 2)
 
 @numba.njit(fastmath=True)
-def mandelbrot_0(c: Complex) -> int:
+def mandelbrot_0(c: True) -> int:
     z = Complex(0.0, 0.0)
     nv = 0
     for i in range(1, MAX_ITERS):
@@ -55,7 +55,7 @@ def mandelbrot_0(c: Complex) -> int:
         nv += 1
     return nv
 
-@numba.njit(fastmath=False, parallel=True)
+@numba.njit(fastmath=True, parallel=True)
 def mandelbrot():
     output = [0]*(height*width)
     for h in numba.prange(height):

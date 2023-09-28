@@ -1,6 +1,6 @@
 Benchmarking several languages/tools with Mandelbrot set generation. No SIMD, no multithreading (except prange() trick with Numba), just 1-to-1 translation of code from one language to another. No tricks (e.g. skipping sqrt, changing the algorythm) and hardcore tailoring of code, bare minimum of language specific adjustments to make the code nicer while keeping all loops and operations in place.
 
-By default using int32 and float64 (where possible, i.e. in Dart all integers are 64 bit, Go comples with 128 bit Complex struct). 
+By default using int32 and float64 (where possible, i.e. in Dart all integers are 64 bit, Go comes with 128 bit Complex struct). 
 
 Sum check column shows the result of calculating the total sum of numbers in the array produced by `mandelbrot()` method. It demonstrates how there can be slight variations (+/-0,1%) in different languages and compiler settings due to differences in floating point math utilized.
 

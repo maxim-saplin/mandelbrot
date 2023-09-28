@@ -1,7 +1,7 @@
 // go run mandelbrot.go
-// 0,54 sec, sum 78513415
+// complex128 0,54 sec, sum 78513415
 // go build -ldflags="-s -w" -o mandelbrot-optimized mandelbrot.go
-// 0,69 sec, sum 79394478
+// complex128 0,69 sec, sum 79394478
 
 package main
 

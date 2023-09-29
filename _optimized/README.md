@@ -1,5 +1,9 @@
 Fine tuned and optimized versions of algos, not apple-to-apple comparisons
 
+AoT, 1 CPU
+Avg: 58.33ms, StdDev: 5.00%
+
+
 dotnet run -c Release
 NumCpu : 2
 IsHardwareAccelerated : True

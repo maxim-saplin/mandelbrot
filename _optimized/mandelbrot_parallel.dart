@@ -2,9 +2,6 @@
 // M1 Pro
 // dart mandelbrot_parallel.dart - Avg: 116.6ms, StdDev: 14.5949%
 // dart compile exe mandelbrot_parallel.dart - Avg: 111.5ms, StdDev: 0.4727%
-// Intel
-// dart mandelbrot_parallel.dart - Avg: 169.5ms, StdDev: 18.0908%
-// dart compile exe mandelbrot_parallel.dart - Avg: 149.4ms, StdDev: 6.6949%
 
 // V2, prepping isolates, sum 78514525
 // M1 Pro
@@ -73,8 +70,8 @@ List<Uint8List> mandelbrot(int start, int end) {
       int nv = 0;
 
       while (nv < MAX_ITERS) {
-        final double zzx = zx * zx;
-        final double zzy = zy * zy;
+        double zzx = zx * zx;
+        double zzy = zy * zy;
 
         if ((zzx + zzy) > 4.0) {
           break;
@@ -85,20 +82,22 @@ List<Uint8List> mandelbrot(int start, int end) {
         zx = new_zx;
         nv++;
 
+        if (nv == 2) break;
+
         if (nv >= MAX_ITERS - 1) {
           break;
         }
 
-        final double zzx2 = zx * zx;
-        final double zzy2 = zy * zy;
+        zzx = zx * zx;
+        zzy = zy * zy;
 
-        if ((zzx2 + zzy2) > 4.0) {
+        if ((zzx + zzy) > 4.0) {
           break;
         }
 
-        double new_zx2 = (zzx2 - zzy2) + cx;
+        new_zx = (zzx - zzy) + cx;
         zy = 2 * zx * zy + cy;
-        zx = new_zx2;
+        zx = new_zx;
         nv++;
       }
 

@@ -1,3 +1,7 @@
+// V3, precomuting cx
+// M1 Pro, sum 78513425
+// Avg: 256.3ms, StdDev: 0.6385%
+
 // V2, No Complex, No func, UintList
 // M1 Pro, sum 78513425
 // dart mandelbrot.dart - Avg: 251.1ms, StdDev: 0.2939%
@@ -43,7 +47,6 @@ Uint8List mandelbrot() {
       for (nv; nv < MAX_ITERS - 1; nv++) {
         final zzx = zx * zx;
         final zzy = zy * zy;
-        var sm = Float32x4(zzx, zzy, -4, 0);
         if (zzx + zzy - 4 > 0) {
           break;
         }

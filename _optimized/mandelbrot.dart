@@ -1,3 +1,8 @@
+// V5, SIMD
+// M1 Pro, sum 78513692
+// dart mandelbrot.dart - Avg: 93.4ms, StdDev: 1.6119%
+// dart compile exe mandelbrot.dart - Avg: 4038.5ms, StdDev: 0.6437%
+
 //V4 loop unrolling
 // M1 Pro, sum 78513425
 // Avg: 250.3ms, StdDev: 0.3289%
@@ -40,58 +45,104 @@ const double scalex = (max_x - min_x) / width;
 const double scaley = (max_y - min_y) / height;
 const int MAX_ITERS = 256;
 
-// Optimization suggestion:
 Uint8List mandelbrot() {
-  final output = Uint8List(width * height);
-  final cxx = Float32List(width);
-
-  for (int w = 0; w < width; w++) {
-    cxx[w] = min_x + w * scalex;
-  }
+  var output = Uint8List(width * height);
+  final escapeThreshold = Float32x4(4.0, 4.0, 4.0, 4.0);
 
   for (int h = 0; h < height; h++) {
-    final double cy = min_y + h * scaley;
+    double cy = min_y + h * scaley;
+    Float32x4 cy4 = Float32x4.splat(cy);
 
-    for (int w = 0; w < width; w++) {
-      final double cx = cxx[w];
-      double zx = cx, zy = cy;
-      int nv = 0;
+    for (int w = 0; w < width; w += 4) {
+      Float32x4 cxx4 = Float32x4(min_x + w * scalex, min_x + (w + 1) * scalex,
+          min_x + (w + 2) * scalex, min_x + (w + 3) * scalex);
+      Float32x4 zx = cxx4;
+      Float32x4 zy = cy4;
+      Int32x4 nv4 = Int32x4(0, 0, 0, 0);
+      int mask = 1;
+      var iter = 2;
 
-      while (nv < MAX_ITERS - 1) {
-        final double zzx = zx * zx;
-        final double zzy = zy * zy;
+      while (mask > 0) {
+        Float32x4 zzx = zx * zx;
+        Float32x4 zzy = zy * zy;
 
-        if ((zzx + zzy) > 4.0) {
-          break;
-        }
-
-        double new_zx = (zzx - zzy) + cx;
-        zy = 2 * zx * zy + cy;
+        Float32x4 new_zx = (zzx - zzy) + cxx4;
+        zy = (zx * zy) + (zx * zy) + cy4;
         zx = new_zx;
-        nv++;
 
-        if (nv >= MAX_ITERS - 1) {
+        var sum = zzx + zzy;
+
+        Int32x4 breakCondition = (escapeThreshold).greaterThan(sum);
+        nv4 += breakCondition & Int32x4(1, 1, 1, 1);
+
+        iter++;
+        if (iter > MAX_ITERS) {
           break;
         }
-
-        final double zzx2 = zx * zx;
-        final double zzy2 = zy * zy;
-
-        if ((zzx2 + zzy2) > 4.0) {
-          break;
-        }
-
-        double new_zx2 = (zzx2 - zzy2) + cx;
-        zy = 2 * zx * zy + cy;
-        zx = new_zx2;
-        nv++;
+        mask = breakCondition.signMask;
       }
 
-      output[h * width + w] = nv;
+      output[h * width + w] = nv4.x;
+      output[h * width + w + 1] = nv4.y;
+      output[h * width + w + 2] = nv4.z;
+      output[h * width + w + 3] = nv4.w;
     }
   }
+
   return output;
 }
+
+// Uint8List mandelbrot() {
+//   final output = Uint8List(width * height);
+//   final cxx = Float32List(width);
+
+//   for (int w = 0; w < width; w++) {
+//     cxx[w] = min_x + w * scalex;
+//   }
+
+//   for (int h = 0; h < height; h++) {
+//     final double cy = min_y + h * scaley;
+
+//     for (int w = 0; w < width; w++) {
+//       final double cx = cxx[w];
+//       double zx = cx, zy = cy;
+//       int nv = 0;
+
+//       while (nv < MAX_ITERS - 1) {
+//         final double zzx = zx * zx;
+//         final double zzy = zy * zy;
+
+//         if ((zzx + zzy) > 4.0) {
+//           break;
+//         }
+
+//         double new_zx = (zzx - zzy) + cx;
+//         zy = 2 * zx * zy + cy;
+//         zx = new_zx;
+//         nv++;
+
+//         if (nv >= MAX_ITERS - 1) {
+//           break;
+//         }
+
+//         final double zzx2 = zx * zx;
+//         final double zzy2 = zy * zy;
+
+//         if ((zzx2 + zzy2) > 4.0) {
+//           break;
+//         }
+
+//         double new_zx2 = (zzx2 - zzy2) + cx;
+//         zy = 2 * zx * zy + cy;
+//         zx = new_zx2;
+//         nv++;
+//       }
+
+//       output[h * width + w] = nv;
+//     }
+//   }
+//   return output;
+// }
 
 void main() {
   const iterations = 10;
@@ -120,6 +171,8 @@ void main() {
       math.sqrt(sumOfSquares / (measurements.length - 1)) / average * 100;
 
   print('Avg: ${average}ms, StdDev: ${standardDeviation.toStringAsFixed(4)}%');
+
+  //calculateFrequencies(result);
 }
 
 void calculateFrequencies(Uint8List list) {

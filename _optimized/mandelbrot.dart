@@ -1,6 +1,8 @@
 //V4 loop unrolling
 // M1 Pro, sum 78513425
 // Avg: 250.3ms, StdDev: 0.3289%
+// Intel, sum 78513425
+// Avg: 303.5ms, StdDev: 3.3141%
 
 // V3, precomuting cx
 // M1 Pro, sum 78513425

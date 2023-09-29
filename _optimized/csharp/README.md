@@ -39,6 +39,7 @@ Vector<float>.Count : 8
 9        Execution Time: 44.0     78516973
 10       Execution Time: 66.0     78516973
 Avg: 48.44ms, StdDev: 15.89%
+
 user@user-virtual-machine:~/Documents/src/mandelbrot/_optimized/csharp$ ./bin/Release/net7.0/ConsoleApp 
 NumCpu : 2
 IsHardwareAccelerated : True

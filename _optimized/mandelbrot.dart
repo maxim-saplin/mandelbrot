@@ -1,6 +1,8 @@
 // V3, precomuting cx
 // M1 Pro, sum 78513425
 // Avg: 256.3ms, StdDev: 0.6385%
+// Intel, sum 78513425
+// Avg: 302.1ms, StdDev: 1.9704%
 
 // V2, No Complex, No func, UintList
 // M1 Pro, sum 78513425

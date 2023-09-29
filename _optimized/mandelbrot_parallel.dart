@@ -1,3 +1,8 @@
+// V3, mirroring, sum 78277544
+// M1 Pro
+// dart mandelbrot_parallel.dart - Avg: 116.6ms, StdDev: 14.5949%
+// dart compile exe mandelbrot_parallel.dart - Avg: 111.5ms, StdDev: 0.4727%
+
 // V2, prepping isolates, sum 78514525
 // M1 Pro
 // dart mandelbrot_parallel.dart - Avg: 135.5ms, StdDev: 14.6542%
@@ -47,8 +52,7 @@ void isolateBody(SendPort replyToMainPort) {
   });
 }
 
-// Modify the mandelbrot function to accept IsolateData and calculate a portion of the set
-Uint8List mandelbrot(int start, int end) {
+List<Uint8List> mandelbrot(int start, int end) {
   final output = Uint8List(width * (end - start));
   final cxx = Float32List(width);
 
@@ -65,7 +69,7 @@ Uint8List mandelbrot(int start, int end) {
       double zx = cx, zy = cy;
       int nv = 0;
 
-      while (nv < MAX_ITERS - 1) {
+      while (nv < MAX_ITERS) {
         final double zzx = zx * zx;
         final double zzy = zy * zy;
 
@@ -98,7 +102,17 @@ Uint8List mandelbrot(int start, int end) {
       output[index++] = nv;
     }
   }
-  return output;
+
+  Uint8List mirror = Uint8List(output.length);
+  int hght = (output.length / width).floor();
+  for (int h = 0; h < hght; h++) {
+    for (int w = 0; w < width; w++) {
+      mirror[(hght - h - 1) * width + w] = output[h * width + w];
+    }
+  }
+  //var mirror = Uint8List.fromList(output);
+
+  return [output, mirror];
 }
 
 late Isolate i1, i2;
@@ -132,8 +146,8 @@ void main() async {
   Uint8List result = Uint8List(0);
   var measurements = <double>[];
   var (send1, send2, receive1, receive2) = await spawnIsolates();
-  final isolateData1 = MandelbrotRequest(0, height ~/ 2);
-  final isolateData2 = MandelbrotRequest(height ~/ 2, height);
+  final isolateData1 = MandelbrotRequest(0, height ~/ 4);
+  final isolateData2 = MandelbrotRequest(height ~/ 4, height ~/ 2);
   for (int i = -1; i < iterations; i++) {
     stdout.write('${i + 1}\t ');
     DateTime start_time = DateTime.now();
@@ -146,8 +160,10 @@ void main() async {
     var results = await Future.wait(futures);
 
     var b = BytesBuilder(copy: false);
-    b.add(results[0]);
-    b.add(results[1]);
+    b.add(results[0][0]);
+    b.add(results[1][0]);
+    b.add(results[1][1]);
+    b.add(results[0][1]);
     result = b.toBytes();
 
     DateTime end_time = DateTime.now();

@@ -5,10 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Dart & Flutter",
+            "name": "mandelbor.dart",
             "request": "launch",
             "type": "dart",
             "program": "${workspaceRoot}/_optimized/mandelbrot.dart",
+        },
+        {
+            "name": "mandelbor_parallel.dart",
+            "request": "launch",
+            "type": "dart",
+            "program": "${workspaceRoot}/_optimized/mandelbrot_parallel.dart",
         }
     ]
 }

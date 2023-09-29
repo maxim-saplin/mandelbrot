@@ -28,21 +28,26 @@ const double scalex = (max_x - min_x) / width;
 const double scaley = (max_y - min_y) / height;
 const int MAX_ITERS = 256;
 
+// Optimization suggestion:
 Uint8List mandelbrot() {
   var output = Uint8List(width * height);
+  var cxx = Float32List(width);
+  for (int w = 0; w < width; w++) {
+    cxx[w] = min_x + w * scalex;
+  }
   for (int h = 0; h < height; h++) {
     double cy = min_y + h * scaley;
     for (int w = 0; w < width; w++) {
-      double cx = min_x + w * scalex;
-      var zx = cx, zy = cy;
+      var zx = cxx[w], zy = cy;
       int nv = 0;
       for (nv; nv < MAX_ITERS - 1; nv++) {
         final zzx = zx * zx;
         final zzy = zy * zy;
-        if (zzx + zzy > 4) {
+        var sm = Float32x4(zzx, zzy, -4, 0);
+        if (zzx + zzy - 4 > 0) {
           break;
         }
-        double new_zx = zzx - zzy + cx;
+        final new_zx = zzx - zzy + cxx[w];
         zy = 2 * zx * zy + cy;
         zx = new_zx;
       }

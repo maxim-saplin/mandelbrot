@@ -17,7 +17,7 @@ namespace ConsoleApp
         static readonly float ScaleX = (MaxX - MinX) / Width;
         static readonly float ScaleY = (MaxY - MinY) / Height;
         static readonly int MaxIters = 256;
-        static readonly int NumCpu = Environment.ProcessorCount / 2 - 1;
+        static readonly int NumCpu = Environment.ProcessorCount;
         private static readonly int[] Result = new int[Height * Width];
 
         private static void MandelbrotSimd()
@@ -88,21 +88,30 @@ namespace ConsoleApp
             Console.WriteLine("IsHardwareAccelerated : {0}", Vector.IsHardwareAccelerated);
             Console.WriteLine("Vector<float>.Count : {0}", Vector<float>.Count);
             var totalElapsed = TimeSpan.Zero;
-            for (int i = 0; i < 500; i++)
+            List<double> measurements = new List<double>();
+            for (int i = -1; i < 10; i++)
             {
-                Console.Write(i + 1 + " ");
+                Console.Write(i + 1 + "\t ");
                 Console.Out.Flush();
                 var stopWatch = new System.Diagnostics.Stopwatch();
                 stopWatch.Start();
                 MandelbrotSimd();
                 stopWatch.Stop();
                 var executionTime = stopWatch.Elapsed;
-                totalElapsed += executionTime;
+                if (i > 0)
+                {
+                    measurements.Add(executionTime.Milliseconds);
+                }
                 var sum = Result.Sum();
-                Console.WriteLine("Execution Time: {0} Sum: {1}", executionTime, sum);
+                Console.WriteLine("Execution Time: {0:F1}\t  {1}", (double)(executionTime.Milliseconds), sum);
             }
 
-            Console.WriteLine("Total Time: {0} Avg Step: {1}", totalElapsed, totalElapsed / 500);
+            double average = measurements.Average();
+            double sumOfSquares = measurements.Select(x => Math.Pow(x - average, 2)).Sum();
+            double standardDeviation = Math.Sqrt(sumOfSquares / (measurements.Count - 1)) / average * 100;
+
+            // Use format string instead of inline values
+            Console.WriteLine("Avg: {0:F2}ms, StdDev: {1:F2}%", average, standardDeviation);
         }
     }
 }

@@ -1,3 +1,8 @@
+// V2, prepping isolates, sum 78514525
+// M1 Pro
+// dart mandelbrot_parallel.dart - Avg: 135.5ms, StdDev: 14.6542%
+// dart compile exe mandelbrot_parallel.dart - Avg: 129.4ms, StdDev: 0.3991%
+
 // V1, sum 78514525
 // M1 Pro
 // dart mandelbrot_parallel.dart - Avg: 145.7ms, StdDev: 1.2128%
@@ -22,17 +27,26 @@ const double scaley = (max_y - min_y) / height;
 const int MAX_ITERS = 256;
 
 // Define a class to hold the data we'll send to each isolate
-class IsolateData {
-  final SendPort sendPort;
+class MandelbrotRequest {
   final int start;
   final int end;
 
-  IsolateData(this.sendPort, this.start, this.end);
+  MandelbrotRequest(this.start, this.end);
+}
+
+void isolateBody(SendPort replyToMainPort) {
+  var isolatePort = ReceivePort();
+  replyToMainPort.send(isolatePort.sendPort);
+  isolatePort.listen((message) async {
+    var rq = (message as MandelbrotRequest);
+    final output = mandelbrot(rq.start, rq.end);
+    replyToMainPort.send(output);
+  });
 }
 
 // Modify the mandelbrot function to accept IsolateData and calculate a portion of the set
-void mandelbrot(IsolateData isolateData) {
-  final output = Uint8List(width * (isolateData.end - isolateData.start));
+Uint8List mandelbrot(int start, int end) {
+  final output = Uint8List(width * (end - start));
   final cxx = Float32List(width);
 
   for (int w = 0; w < width; w++) {
@@ -40,7 +54,7 @@ void mandelbrot(IsolateData isolateData) {
   }
 
   int index = 0;
-  for (int h = isolateData.start; h < isolateData.end; h++) {
+  for (int h = start; h < end; h++) {
     final double cy = min_y + h * scaley;
 
     for (int w = 0; w < width; w++) {
@@ -81,34 +95,58 @@ void mandelbrot(IsolateData isolateData) {
       output[index++] = nv;
     }
   }
-  isolateData.sendPort.send(output);
+  return output;
 }
 
-// Function to spawn the isolates and merge the results
-Future<Uint8List> spawnIsolates() async {
-  final response = Completer<Uint8List>();
-  final receivePort = ReceivePort();
-  final isolateData1 = IsolateData(receivePort.sendPort, 0, height ~/ 2);
-  final isolateData2 = IsolateData(receivePort.sendPort, height ~/ 2, height);
+late Isolate i1, i2;
+late ReceivePort mainIsolatPort1, mainIsolatPort2;
 
-  await Isolate.spawn(mandelbrot, isolateData1);
-  await Isolate.spawn(mandelbrot, isolateData2);
+Future<(SendPort, SendPort, Stream, Stream)> spawnIsolates() async {
+  mainIsolatPort1 = ReceivePort();
+  mainIsolatPort2 = ReceivePort();
 
-  final results = await receivePort.take(2).toList();
+  i1 = await Isolate.spawn<SendPort>(isolateBody, mainIsolatPort1.sendPort);
+  i2 = await Isolate.spawn<SendPort>(isolateBody, mainIsolatPort2.sendPort);
 
-  response.complete(Uint8List.fromList([...results[0], ...results[1]]));
-  return response.future;
+  var r1 = mainIsolatPort1.asBroadcastStream();
+  var r2 = mainIsolatPort2.asBroadcastStream();
+
+  var p1 = await r1.first as SendPort;
+  var p2 = await r2.first as SendPort;
+
+  return (p1, p2, r1, r2);
+}
+
+void killIsolates() {
+  mainIsolatPort1.close();
+  mainIsolatPort2.close();
+  i1.kill();
+  i2.kill();
 }
 
 void main() async {
   const iterations = 10;
   Uint8List result = Uint8List(0);
   var measurements = <double>[];
+  var (send1, send2, receive1, receive2) = await spawnIsolates();
+  final isolateData1 = MandelbrotRequest(0, height ~/ 2);
+  final isolateData2 = MandelbrotRequest(height ~/ 2, height);
   for (int i = -1; i < iterations; i++) {
     stdout.write('${i + 1}\t ');
     DateTime start_time = DateTime.now();
-    //result = mandelbrot();
-    result = await spawnIsolates();
+
+    send1.send(isolateData1);
+    send2.send(isolateData2);
+
+    var futures = [receive1.first, receive2.first];
+
+    var results = await Future.wait(futures);
+
+    var b = BytesBuilder(copy: false);
+    b.add(results[0]);
+    b.add(results[1]);
+    result = b.toBytes();
+
     DateTime end_time = DateTime.now();
     Duration execution_time = end_time.difference(start_time);
     stdout.write(' Execution Time: ${execution_time.inMilliseconds}');
@@ -130,6 +168,8 @@ void main() async {
   print('Avg: ${average}ms, StdDev: ${standardDeviation.toStringAsFixed(4)}%');
 
   //calculateFrequencies(result);
+  stdout.flush();
+  killIsolates();
 }
 
 void calculateFrequencies(Uint8List list) {

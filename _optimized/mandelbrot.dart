@@ -2,6 +2,9 @@
 // M1 Pro, sum 78513692
 // dart mandelbrot.dart - Avg: 93.4ms, StdDev: 1.6119%
 // dart compile exe mandelbrot.dart - Avg: 4038.5ms, StdDev: 0.6437%
+// Intel
+// dart mandelbrot.dart - !! sum 87667671 Avg: 162.9ms, StdDev: 7.5598%
+// dart compile exe mandelbrot.dart - sum 78513692, Avg: 8806.0ms, StdDev: 4.4871%
 
 //V4 loop unrolling
 // M1 Pro, sum 78513425
@@ -19,7 +22,7 @@
 // M1 Pro, sum 78513425
 // dart mandelbrot.dart - Avg: 251.1ms, StdDev: 0.2939%
 // dart compile exe mandelbrot.dart - Avg: 251.3ms, StdDev: 0.3276%
-// Intel, sum 78513425
+// Intel, sum 78513425Uint8List mandelbrot()
 // dart mandelbrot.dart - Avg: 298.3ms, StdDev: 1.9930%
 // dart compile exe mandelbrot.dart - Avg: 295.6ms, StdDev: 0.9856%
 

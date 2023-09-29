@@ -17,7 +17,7 @@ namespace ConsoleApp
         static readonly float ScaleX = (MaxX - MinX) / Width;
         static readonly float ScaleY = (MaxY - MinY) / Height;
         static readonly int MaxIters = 256;
-        static readonly int NumCpu = Environment.ProcessorCount;
+        static readonly int NumCpu = 1;//Environment.ProcessorCount;
         private static readonly int[] Result = new int[Height * Width];
 
         private static void MandelbrotSimd()

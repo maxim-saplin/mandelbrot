@@ -1,7 +1,7 @@
 // V7, one spawned isolate, one main, Isolate.exit and sleeps, sum 78279528
 // M1 Pro
-// dart mandelbrot_parallel.dart -
-// dart compile exe mandelbrot_parallel.dart -
+// dart mandelbrot_parallel.dart - Avg: 51.3ms, StdDev: 12.0182%
+// dart compile exe mandelbrot_parallel.dart - Avg: 47.5ms, StdDev: 10.5146%
 // Intel
 // dart mandelbrot_parallel.dart - Avg: 57.2ms, StdDev: 10.1539%
 // dart compile exe mandelbrot_parallel.dart - Avg: 56.6ms, StdDev: 15.1573%

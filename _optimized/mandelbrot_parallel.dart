@@ -1,7 +1,15 @@
+// V4, sum 78279528
+// M1 Pro
+// dart mandelbrot_parallel.dart - Avg: 55.5ms, StdDev: 15.5287%
+// dart compile exe mandelbrot_parallel.dart - Avg: 52.2ms, StdDev: 0.8077%
+
 // V3, mirroring, sum 78277544
 // M1 Pro
 // dart mandelbrot_parallel.dart - Avg: 116.6ms, StdDev: 14.5949%
 // dart compile exe mandelbrot_parallel.dart - Avg: 111.5ms, StdDev: 0.4727%
+// Intel
+// dart mandelbrot_parallel.dart - Avg: 169.5ms, StdDev: 18.0908%
+// dart compile exe mandelbrot_parallel.dart - Avg: 149.4ms, StdDev: 6.6949%
 
 // V2, prepping isolates, sum 78514525
 // M1 Pro
@@ -66,45 +74,50 @@ List<Uint8List> mandelbrot(int start, int end) {
 
     for (int w = 0; w < width; w++) {
       final double cx = cxx[w];
-      double zx = cx, zy = cy;
       int nv = 0;
+      double zx = cx, zy = cy;
 
-      while (nv < MAX_ITERS) {
-        double zzx = zx * zx;
-        double zzy = zy * zy;
+      // Skipping calculation for known to be madelbrot area
+      if (cx > -0.53 && cx < 0.27 && cy > -0.47) {
+        nv = MAX_ITERS - 1;
+      } else {
+        //lowerCnt++;
+        while (nv < MAX_ITERS) {
+          double zzx = zx * zx;
+          double zzy = zy * zy;
 
-        if ((zzx + zzy) > 4.0) {
-          break;
+          if ((zzx + zzy) > 4.0) {
+            break;
+          }
+
+          double new_zx = (zzx - zzy) + cx;
+          zy = 2 * zx * zy + cy;
+          zx = new_zx;
+          nv++;
+
+          if (nv >= MAX_ITERS - 1) {
+            break;
+          }
+
+          zzx = zx * zx;
+          zzy = zy * zy;
+
+          if ((zzx + zzy) > 4.0) {
+            break;
+          }
+
+          new_zx = (zzx - zzy) + cx;
+          zy = 2 * zx * zy + cy;
+          zx = new_zx;
+
+          nv++;
         }
-
-        double new_zx = (zzx - zzy) + cx;
-        zy = 2 * zx * zy + cy;
-        zx = new_zx;
-        nv++;
-
-        if (nv == 2) break;
-
-        if (nv >= MAX_ITERS - 1) {
-          break;
-        }
-
-        zzx = zx * zx;
-        zzy = zy * zy;
-
-        if ((zzx + zzy) > 4.0) {
-          break;
-        }
-
-        new_zx = (zzx - zzy) + cx;
-        zy = 2 * zx * zy + cy;
-        zx = new_zx;
-        nv++;
       }
-
       output[index++] = nv;
     }
   }
 
+  //print(cnt);
   Uint8List mirror = Uint8List(output.length);
   int hght = (output.length / width).floor();
   for (int h = 0; h < hght; h++) {
@@ -192,6 +205,8 @@ void main() async {
   stdout.flush();
   killIsolates();
 }
+
+void saveToPicture(Uint8List data) {}
 
 void calculateFrequencies(Uint8List list) {
   var frequencyMap = <int, int>{};

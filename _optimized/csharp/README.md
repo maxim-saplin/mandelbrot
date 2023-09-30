@@ -7,6 +7,13 @@ JIT, 1 CPU: Avg: 40.80ms, StdDev: 30.60%
 AOT, 2 CPU: Avg: 44.76ms, StdDev: 89.10%
 AOT, 1 CPU: Avg: 33.14ms, StdDev: 4.05%
 
+/M1 Pro:
+JIT, 10CPU: Avg: 26.68ms, StdDev: 69.02%
+JIT, 1CPU: Avg: 38.41ms, StdDev: 0.38%
+AoT, 10CPU: Avg: 26.24ms, StdDev: 76.43%
+AoT, 8CPU: Avg: 26.00ms, StdDev: 78.56%
+AoT, 1CPU: Avg: 38.37ms, StdDev: 0.35%
+
 
 V1, sum 78516973:
 

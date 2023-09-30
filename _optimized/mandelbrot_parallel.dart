@@ -1,4 +1,5 @@
 // V7, one spawned isolate, one main, Isolate.exit and sleeps, sum 78279528
+// This version started giving different gains for ARM and Intel, optimizing for Intel affected ARM negatively
 // M1 Pro
 // dart mandelbrot_parallel.dart - Avg: 51.3ms, StdDev: 12.0182%
 // dart compile exe mandelbrot_parallel.dart - Avg: 47.5ms, StdDev: 10.5146%

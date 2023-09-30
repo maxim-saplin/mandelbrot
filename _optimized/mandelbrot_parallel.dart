@@ -68,6 +68,7 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:isolate';
 import 'dart:async';
+import 'dart:io';
 
 const int height = 1024;
 const int width = 1024;
@@ -293,10 +294,18 @@ void main() async {
   print('Avg: ${average}ms, StdDev: ${standardDeviation.toStringAsFixed(4)}%');
 
   //calculateFrequencies(result);
+  writeToFile(result);
   stdout.flush();
 }
 
-void saveToPicture(Uint8List data) {}
+void writeToFile(Uint8List data) {
+  // Convert Uint8List to comma separated string
+  String dataString = data.join(',');
+
+  // Write to file
+  File file = File("output.txt");
+  file.writeAsStringSync(dataString, mode: FileMode.write);
+}
 
 void calculateFrequencies(Uint8List list) {
   var frequencyMap = <int, int>{};

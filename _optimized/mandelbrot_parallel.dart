@@ -1,3 +1,8 @@
+// V8, aproximating known regions with cicrles
+// M1 Pro
+// dart mandelbrot_parallel.dart - Avg: 24.0ms, StdDev: 18.7371%
+// // dart mandelbrot_parallel.dart - Avg: 23.5ms, StdDev: 15.6993%
+
 // V7, one spawned isolate, one main, Isolate.exit and sleeps, sum 78279528
 // This version started giving different gains for ARM and Intel, optimizing for Intel affected ARM negatively
 // Delay/slleps in the loop doesn't look nice yet seem legit. Isolate.exit() is supposed to increase cross-isolate transfer at that seems to be the case
@@ -112,10 +117,27 @@ Uint8List mandelbrot(int start, int end, [bool returnBigList = false]) {
       int nv = 0;
       double zx = cx, zy = cy;
 
+      const r1 = 0.607 * 0.607;
+      const dx1 = 0.133;
+      const dy1 = 0.0386;
+
+      const r2 = 0.248 * 0.248;
+      const dx2 = 1.0;
+
+      const r3 = 0.343 * 0.343;
+      const dx3 = -0.0089;
+      const dy3 = 0.2634;
+
       // Skipping calculation for known to be madelbrot area
-      if ((cx > -1.17 && cx < -0.83 && cy > -0.18) ||
-          (cx > -0.55 && cx < 0.272 && cy > -0.48) ||
-          (cx > -0.33 && cx < 0.1 && cy > -0.6)) {
+      if (cx > -0.75 &&
+              cx < 0.23 &&
+              ((cx + dx1) * (cx + dx1) + (cy + dy1) * (cy + dy1) < r1) ||
+          ((cx + dx2) * (cx + dx2) + cy * cy < r2) ||
+          (cx > 0.23 && (cx + dx3) * (cx + dx3) + (cy + dy3) * (cy + dy3) < r3))
+      //(cx > -0.55 && cx < 0.272 && cy > -0.48) ||
+      //(cx > -0.33 && cx < 0.1 && cy > -0.6) ||
+      //(cx > -1.17 && cx < -0.83 && cy > -0.18))
+      {
         nv = MAX_ITERS - 1;
         //count255++;
       } else {

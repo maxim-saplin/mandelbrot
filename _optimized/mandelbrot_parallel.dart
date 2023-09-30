@@ -3,8 +3,8 @@
 // dart mandelbrot_parallel.dart - Avg: 48.5ms, StdDev: 3.2601%
 // dart compile exe mandelbrot_parallel.dart - Avg: 48.0ms, StdDev: 0.0000%
 // Intel
-// dart mandelbrot_parallel.dart - Avg: 69.8ms, StdDev: 12.4128%
-// dart compile exe mandelbrot_parallel.dart - Avg: 66.7ms, StdDev: 6.2837%
+// dart mandelbrot_parallel.dart - Avg: 69.3ms, StdDev: 16.0116%
+// dart compile exe mandelbrot_parallel.dart - Avg: 62.5ms, StdDev: 2.2940%
 
 // V5, more known regions, sum 78279528
 // M1 Pro
@@ -203,9 +203,11 @@ void main() async {
 
     result = mandelbrot(0, height ~/ 2);
     int hght = (result.length / width).floor();
+    int wdth = width ~/ 4;
+    var r = result.buffer.asUint32List();
     for (int h = 0; h < hght; h++) {
-      for (int w = 0; w < width; w++) {
-        result[(hght - h - 1) * width + w] = result[h * width + w];
+      for (int w = 0; w < wdth; w++) {
+        r[(hght - h - 1) * wdth + w] = result[h * wdth + w];
       }
     }
 
@@ -231,7 +233,7 @@ void main() async {
 
   //calculateFrequencies(result);
   stdout.flush();
-  killIsolates();
+  //killIsolates();
 }
 
 void saveToPicture(Uint8List data) {}

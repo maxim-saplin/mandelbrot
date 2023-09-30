@@ -117,7 +117,7 @@ Uint8List mandelbrot(int start, int end, [bool returnBigList = false]) {
           (cx > -0.55 && cx < 0.272 && cy > -0.48) ||
           (cx > -0.33 && cx < 0.1 && cy > -0.6)) {
         nv = MAX_ITERS - 1;
-        count255++;
+        //count255++;
       } else {
         while (nv < MAX_ITERS) {
           double zzx = zx * zx;

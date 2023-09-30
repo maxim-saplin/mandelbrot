@@ -1,3 +1,8 @@
+// V7, one spawned isolate one main
+// M1 Pro
+// dart mandelbrot_parallel.dart - Avg: 36.1ms, StdDev: 18.3955%
+// dart compile exe mandelbrot_parallel.dart - Avg: 35.4ms, StdDev: 2.7291%
+
 // V6, all previoius optimization, but no isolates, 1 thread
 // M1 Pro
 // dart mandelbrot_parallel.dart - Avg: 48.5ms, StdDev: 3.2601%
@@ -79,9 +84,11 @@ void isolateBody(SendPort replyToMainPort) {
   });
 }
 
-Uint8List mandelbrot(int start, int end) {
+Uint8List mandelbrot(int start, int end, [bool returnBigList = false]) {
   //final output = Uint8List(width * (end - start));
-  final output = Uint8List(width * height);
+  final output = returnBigList
+      ? Uint8List(width * height)
+      : Uint8List(width * (end - start));
   final cxx = Float32List(width);
 
   for (int w = 0; w < width; w++) {
@@ -103,7 +110,6 @@ Uint8List mandelbrot(int start, int end) {
           (cx > -0.33 && cx < 0.1 && cy > -0.6)) {
         nv = MAX_ITERS - 1;
       } else {
-        //lowerCnt++;
         while (nv < MAX_ITERS) {
           double zzx = zx * zx;
           double zzy = zy * zy;
@@ -150,50 +156,53 @@ Uint8List mandelbrot(int start, int end) {
   return output;
 }
 
-late Isolate i1, i2;
-late ReceivePort mainIsolatPort1, mainIsolatPort2;
+Isolate? i1, i2;
+ReceivePort? mainIsolatPort1, mainIsolatPort2;
 
-Future<(SendPort, SendPort, Stream, Stream)> spawnIsolates() async {
+Future<(SendPort?, SendPort?, Stream?, Stream?)> spawnIsolates(
+    [bool one = false]) async {
   mainIsolatPort1 = ReceivePort();
-  mainIsolatPort2 = ReceivePort();
 
-  i1 = await Isolate.spawn<SendPort>(isolateBody, mainIsolatPort1.sendPort);
-  i2 = await Isolate.spawn<SendPort>(isolateBody, mainIsolatPort2.sendPort);
+  i1 = await Isolate.spawn<SendPort>(isolateBody, mainIsolatPort1!.sendPort);
 
-  var r1 = mainIsolatPort1.asBroadcastStream();
-  var r2 = mainIsolatPort2.asBroadcastStream();
+  if (!one) {
+    mainIsolatPort2 = ReceivePort();
+    i2 = await Isolate.spawn<SendPort>(isolateBody, mainIsolatPort2!.sendPort);
+  }
+
+  var r1 = mainIsolatPort1!.asBroadcastStream();
+  var r2 = !one ? mainIsolatPort2!.asBroadcastStream() : null;
 
   var p1 = await r1.first as SendPort;
-  var p2 = await r2.first as SendPort;
+  var p2 = !one ? await r2!.first as SendPort : null;
 
   return (p1, p2, r1, r2);
 }
 
 void killIsolates() {
-  mainIsolatPort1.close();
-  mainIsolatPort2.close();
-  i1.kill();
-  i2.kill();
+  mainIsolatPort1?.close();
+  mainIsolatPort2?.close();
+  i1?.kill();
+  i2?.kill();
 }
 
 void main() async {
   const iterations = 10;
   Uint8List result = Uint8List(0);
   var measurements = <double>[];
-  // var (send1, send2, receive1, receive2) = await spawnIsolates();
-  // final isolateData1 = MandelbrotRequest(0, height ~/ 4);
+  var (send1, _, receive1, _) = await spawnIsolates(true);
+  final isolateData = MandelbrotRequest(height ~/ 4, height ~/ 2);
+  //final isolateData1 = MandelbrotRequest(0, height ~/ 4);
   // final isolateData2 = MandelbrotRequest(height ~/ 4, height ~/ 2);
   for (int i = -1; i < iterations; i++) {
     stdout.write('${i + 1}\t ');
     DateTime start_time = DateTime.now();
 
-    // send1.send(isolateData1);
+    //send1!.send(isolateData1);
     // send2.send(isolateData2);
 
     // var futures = [receive1.first, receive2.first];
-
     // var results = await Future.wait(futures);
-
     // var b = BytesBuilder(copy: false);
     // b.add(results[0][0]);
     // b.add(results[1][0]);
@@ -201,13 +210,25 @@ void main() async {
     // b.add(results[0][1]);
     // result = b.toBytes();
 
-    result = mandelbrot(0, height ~/ 2);
-    int hght = (result.length / width).floor();
-    int wdth = width ~/ 4;
-    var r = result.buffer.asUint32List();
+    send1!.send(isolateData);
+
+    result = mandelbrot(0, height ~/ 4, true);
+    int hght = height ~/ 4;
+    int wdth = width ~/ 8;
+    var r = result.buffer.asUint64List();
     for (int h = 0; h < hght; h++) {
       for (int w = 0; w < wdth; w++) {
-        r[(hght - h - 1) * wdth + w] = result[h * wdth + w];
+        r[(height - h - 1) * wdth + w] = r[h * wdth + w];
+      }
+    }
+
+    var res2 = await receive1!.first;
+
+    var r2 = res2.buffer.asUint64List();
+    for (int h = 0; h < hght; h++) {
+      for (int w = 0; w < wdth; w++) {
+        r[(3 * hght - h - 1) * wdth + w] = r2[h * wdth + w];
+        r[(hght + h) * wdth + w] = r2[h * wdth + w];
       }
     }
 
@@ -233,7 +254,7 @@ void main() async {
 
   //calculateFrequencies(result);
   stdout.flush();
-  //killIsolates();
+  killIsolates();
 }
 
 void saveToPicture(Uint8List data) {}

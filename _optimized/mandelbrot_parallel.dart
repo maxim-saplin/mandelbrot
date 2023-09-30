@@ -2,6 +2,9 @@
 // M1 Pro
 // dart mandelbrot_parallel.dart - Avg: 55.5ms, StdDev: 15.5287%
 // dart compile exe mandelbrot_parallel.dart - Avg: 52.2ms, StdDev: 0.8077%
+// Intel
+// dart mandelbrot_parallel.dart - Avg: 91.2ms, StdDev: 20.4404%
+// dart compile exe mandelbrot_parallel.dart - Avg: 84.8ms, StdDev: 12.3280%
 
 // V3, mirroring, sum 78277544
 // M1 Pro

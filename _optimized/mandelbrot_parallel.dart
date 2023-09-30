@@ -1,7 +1,10 @@
-// V7, one spawned isolate one main
+// V7, one spawned isolate, one main, Isolate.exit and sleeps, sum 78279528
 // M1 Pro
-// dart mandelbrot_parallel.dart - Avg: 36.1ms, StdDev: 18.3955%
-// dart compile exe mandelbrot_parallel.dart - Avg: 35.4ms, StdDev: 2.7291%
+// dart mandelbrot_parallel.dart -
+// dart compile exe mandelbrot_parallel.dart -
+// Intel
+// dart mandelbrot_parallel.dart - Avg: 57.2ms, StdDev: 10.1539%
+// dart compile exe mandelbrot_parallel.dart - Avg: 56.6ms, StdDev: 15.1573%
 
 // V6, all previoius optimization, but no isolates, 1 thread
 // M1 Pro
@@ -80,7 +83,8 @@ void isolateBody(SendPort replyToMainPort) {
   isolatePort.listen((message) async {
     var rq = (message as MandelbrotRequest);
     final output = mandelbrot(rq.start, rq.end);
-    replyToMainPort.send(output);
+    //replyToMainPort.send(output);
+    Isolate.exit(replyToMainPort, output);
   });
 }
 
@@ -190,13 +194,14 @@ void main() async {
   const iterations = 10;
   Uint8List result = Uint8List(0);
   var measurements = <double>[];
-  var (send1, _, receive1, _) = await spawnIsolates(true);
+  //var (send1, _, receive1, _) = await spawnIsolates(true);
   final isolateData = MandelbrotRequest(height ~/ 4, height ~/ 2);
   //final isolateData1 = MandelbrotRequest(0, height ~/ 4);
   // final isolateData2 = MandelbrotRequest(height ~/ 4, height ~/ 2);
   for (int i = -1; i < iterations; i++) {
     stdout.write('${i + 1}\t ');
     DateTime start_time = DateTime.now();
+    var (send1, _, receive1, _) = await spawnIsolates(true);
 
     //send1!.send(isolateData1);
     // send2.send(isolateData2);
@@ -241,6 +246,9 @@ void main() async {
     if (i >= 0) {
       measurements.add(execution_time.inMilliseconds.toDouble());
     }
+
+    killIsolates();
+    await Future.delayed(Duration(milliseconds: 150));
   }
 
   // Calculate average and standard deviation
@@ -254,7 +262,6 @@ void main() async {
 
   //calculateFrequencies(result);
   stdout.flush();
-  killIsolates();
 }
 
 void saveToPicture(Uint8List data) {}

@@ -5,4 +5,4 @@ Ubuntu 22.04.3 LTS, 64 bit, Intel Core i5-8257U @ 1.4GHz x 2, VMWare Workstation
 | Language/variant                            | Current                         | Original         |
 |---------------------------------------------|---------------------------------|------------------|
 | C# (SIMD + Mirroring + AoT)                 | Avg: 33.14ms, StdDev: 4.05%     | 0,33 sec         |
-| Dart (Mirroring + Isolates + Known regions) | Avg: 56.6ms, StdDev: 15.15%     | 0,42 sec         |
+| Dart (Mirroring + Isolates + Known regions) | Avg: 19.2ms, StdDev: 14.27%     | 0,42 sec         |

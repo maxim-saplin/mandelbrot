@@ -1,4 +1,9 @@
-//V5, more known regions, sum 78279528
+// V6, all previoius optimization, but no isolates, 1 thread
+// M1 Pro
+// dart mandelbrot_parallel.dart - Avg: 48.5ms, StdDev: 3.2601%
+// dart compile exe mandelbrot_parallel.dart - Avg: 48.0ms, StdDev: 0.0000%
+
+// V5, more known regions, sum 78279528
 // M1 Pro
 // dart mandelbrot_parallel.dart - Avg: 36.8ms, StdDev: 16.4446%
 // dart compile exe mandelbrot_parallel.dart - Avg: 35.0ms, StdDev: 1.3469%
@@ -71,8 +76,9 @@ void isolateBody(SendPort replyToMainPort) {
   });
 }
 
-List<Uint8List> mandelbrot(int start, int end) {
-  final output = Uint8List(width * (end - start));
+Uint8List mandelbrot(int start, int end) {
+  //final output = Uint8List(width * (end - start));
+  final output = Uint8List(width * height);
   final cxx = Float32List(width);
 
   for (int w = 0; w < width; w++) {
@@ -130,17 +136,15 @@ List<Uint8List> mandelbrot(int start, int end) {
     }
   }
 
-  //print(cnt);
-  Uint8List mirror = Uint8List(output.length);
-  int hght = (output.length / width).floor();
-  for (int h = 0; h < hght; h++) {
-    for (int w = 0; w < width; w++) {
-      mirror[(hght - h - 1) * width + w] = output[h * width + w];
-    }
-  }
-  //var mirror = Uint8List.fromList(output);
+  // Uint8List mirror = Uint8List(output.length);
+  // int hght = (output.length / width).floor();
+  // for (int h = 0; h < hght; h++) {
+  //   for (int w = 0; w < width; w++) {
+  //     mirror[(hght - h - 1) * width + w] = output[h * width + w];
+  //   }
+  // }
 
-  return [output, mirror];
+  return output;
 }
 
 late Isolate i1, i2;
@@ -173,26 +177,34 @@ void main() async {
   const iterations = 10;
   Uint8List result = Uint8List(0);
   var measurements = <double>[];
-  var (send1, send2, receive1, receive2) = await spawnIsolates();
-  final isolateData1 = MandelbrotRequest(0, height ~/ 4);
-  final isolateData2 = MandelbrotRequest(height ~/ 4, height ~/ 2);
+  // var (send1, send2, receive1, receive2) = await spawnIsolates();
+  // final isolateData1 = MandelbrotRequest(0, height ~/ 4);
+  // final isolateData2 = MandelbrotRequest(height ~/ 4, height ~/ 2);
   for (int i = -1; i < iterations; i++) {
     stdout.write('${i + 1}\t ');
     DateTime start_time = DateTime.now();
 
-    send1.send(isolateData1);
-    send2.send(isolateData2);
+    // send1.send(isolateData1);
+    // send2.send(isolateData2);
 
-    var futures = [receive1.first, receive2.first];
+    // var futures = [receive1.first, receive2.first];
 
-    var results = await Future.wait(futures);
+    // var results = await Future.wait(futures);
 
-    var b = BytesBuilder(copy: false);
-    b.add(results[0][0]);
-    b.add(results[1][0]);
-    b.add(results[1][1]);
-    b.add(results[0][1]);
-    result = b.toBytes();
+    // var b = BytesBuilder(copy: false);
+    // b.add(results[0][0]);
+    // b.add(results[1][0]);
+    // b.add(results[1][1]);
+    // b.add(results[0][1]);
+    // result = b.toBytes();
+
+    result = mandelbrot(0, height ~/ 2);
+    int hght = (result.length / width).floor();
+    for (int h = 0; h < hght; h++) {
+      for (int w = 0; w < width; w++) {
+        result[(hght - h - 1) * width + w] = result[h * width + w];
+      }
+    }
 
     DateTime end_time = DateTime.now();
     Duration execution_time = end_time.difference(start_time);

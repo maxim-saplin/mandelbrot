@@ -20,7 +20,7 @@ namespace ConsoleApp
         static readonly float ScaleX = (MaxX - MinX) / Width;
         static readonly float ScaleY = (MaxY - MinY) / Height;
         static readonly int MaxIters = 256;
-        static readonly int NumCpu = Environment.ProcessorCount / 2;
+        static readonly int NumCpu = Environment.ProcessorCount;
         static readonly Vector<float> MinYVec = new(MinY);
         static readonly Vector<float> ScaleXVec = new(ScaleX);
         static readonly Vector<float> ScaleYVec = new(ScaleY);
@@ -113,9 +113,9 @@ namespace ConsoleApp
             Console.WriteLine("IsHardwareAccelerated : {0}", Vector.IsHardwareAccelerated);
             Console.WriteLine("Vector<float>.Count : {0}", Vector<float>.Count);
             var measurements = new List<double>();
-            for (int i = 0; i < 200; i++)
+            for (int i = -1; i < 10; i++)
             {
-                Console.Write(i + 1 + " ");
+                Console.Write(i + 1 + "\t ");
                 Console.Out.Flush();
                 Array.Clear(Result);
                 var stopWatch = new Stopwatch();
@@ -123,9 +123,11 @@ namespace ConsoleApp
                 MandelbrotSimd();
                 stopWatch.Stop();
                 var executionTime = stopWatch.Elapsed;
-                measurements.Add(executionTime.TotalMilliseconds);
+                if (i >= 0) {
+                    measurements.Add(executionTime.TotalMilliseconds);
+                }
                 var sum = Result.Sum();
-                Console.WriteLine("Execution Time: {0:F2}ms {1}", executionTime.TotalMilliseconds, sum);
+                Console.WriteLine("Execution Time:      {0:F2}ms\t  {1}", executionTime.TotalMilliseconds, sum);
             }
             
             var average = measurements.Average();

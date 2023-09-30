@@ -1,5 +1,15 @@
 Fine tuned and optimized versions of algos, not apple-to-apple comparisons
 
+
+V2 (mirroring, improved SIMD), sum 78391100:
+JIT, 2 CPU: Avg: 47.80ms, StdDev: 24.27%
+JIT, 1 CPU: Avg: 40.80ms, StdDev: 30.60%
+AOT, 2 CPU: Avg: 44.76ms, StdDev: 89.10%
+AOT, 1 CPU: Avg: 33.14ms, StdDev: 4.05%
+
+
+V1, sum 78516973:
+
 AoT, 1 CPU
 Avg: 58.33ms, StdDev: 5.00%
 

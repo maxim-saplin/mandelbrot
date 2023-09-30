@@ -1,4 +1,9 @@
-// V4, sum 78279528
+//V5, more known regions, sum 78279528
+// M1 Pro
+// dart mandelbrot_parallel.dart - Avg: 36.8ms, StdDev: 16.4446%
+// dart compile exe mandelbrot_parallel.dart - Avg: 35.0ms, StdDev: 1.3469%
+
+// V4, removing iterations for known regions, sum 78279528
 // M1 Pro
 // dart mandelbrot_parallel.dart - Avg: 55.5ms, StdDev: 15.5287%
 // dart compile exe mandelbrot_parallel.dart - Avg: 52.2ms, StdDev: 0.8077%
@@ -81,7 +86,9 @@ List<Uint8List> mandelbrot(int start, int end) {
       double zx = cx, zy = cy;
 
       // Skipping calculation for known to be madelbrot area
-      if (cx > -0.53 && cx < 0.27 && cy > -0.47) {
+      if ((cx > -1.17 && cx < -0.83 && cy > -0.18) ||
+          (cx > -0.55 && cx < 0.272 && cy > -0.48) ||
+          (cx > -0.33 && cx < 0.1 && cy > -0.6)) {
         nv = MAX_ITERS - 1;
       } else {
         //lowerCnt++;

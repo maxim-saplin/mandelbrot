@@ -1,7 +1,7 @@
 // V8, aproximating known regions with cicrles, sum 78312740
 // M1 Pro
 // dart mandelbrot_parallel.dart - Avg: 24.0ms, StdDev: 18.7371%
-// dart mandelbrot_parallel.dart - Avg: 23.5ms, StdDev: 15.6993%
+// dart compile exe mandelbrot_parallel.dart - Avg: 23.5ms, StdDev: 15.6993%
 // Intel
 // dart mandelbrot_parallel.dart - Avg: 25.3ms, StdDev: 18.0698%
 // dart compile exe mandelbrot_parallel.dart - Avg: 19.2ms, StdDev: 14.2742%

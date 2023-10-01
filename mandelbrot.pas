@@ -22,20 +22,29 @@ type
 
 function Complex(Re, Im: Double): TComplex;
 begin
-  Result.Re := Re;
-  Result.Im := Im;
+  with Result do
+  begin
+    Re := Re;
+    Im := Im;
+  end;
 end;
 
 function AddComplex(a, b: TComplex): TComplex;
 begin
-  Result.Re := a.Re + b.Re;
-  Result.Im := a.Im + b.Im;
+  with Result do
+  begin
+    Re := a.Re + b.Re;
+    Im := a.Im + b.Im;
+  end;
 end;
 
 function MultComplex(a, b: TComplex): TComplex;
 begin
-  Result.Re := a.Re * b.Re - a.Im * b.Im;
-  Result.Im := a.Re * b.Im + a.Im * b.Re;
+  with Result do
+  begin
+    Re := a.Re * b.Re - a.Im * b.Im;
+    Im := a.Re * b.Im + a.Im * b.Re;
+  end;
 end;
 
 function AbsComplex(a: TComplex): Double;

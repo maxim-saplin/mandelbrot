@@ -1,6 +1,6 @@
 program Mandelbrot;
 
-uses SysUtils, Math, DateUtils, Complex;
+uses SysUtils, Math, DateUtils;
 
 const
   height    = 1024;
@@ -14,7 +14,34 @@ const
   MAX_ITERS = 256;
 
 type
+  TComplex = record
+    Re, Im: Double;
+  end;
+
   TOutputArray = array[0..height - 1, 0..width - 1] of Integer;
+
+function Complex(Re, Im: Double): TComplex;
+begin
+  Result.Re := Re;
+  Result.Im := Im;
+end;
+
+function AddComplex(a, b: TComplex): TComplex;
+begin
+  Result.Re := a.Re + b.Re;
+  Result.Im := a.Im + b.Im;
+end;
+
+function MultComplex(a, b: TComplex): TComplex;
+begin
+  Result.Re := a.Re * b.Re - a.Im * b.Im;
+  Result.Im := a.Re * b.Im + a.Im * b.Re;
+end;
+
+function AbsComplex(a: TComplex): Double;
+begin
+  Result := sqrt(a.Re * a.Re + a.Im * a.Im);
+end;
 
 function mandelbrot_0(c: TComplex): Integer;
 var
@@ -25,9 +52,9 @@ begin
   nv := 0;
   for i := 1 to MAX_ITERS - 1 do
   begin
-    if abs(z) > 2 then
+    if AbsComplex(z) > 2 then
       Break;
-    z := z * z + c;
+    z := AddComplex(MultComplex(z, z), c);
     nv := nv + 1;
   end;
   Result := nv;
@@ -73,4 +100,4 @@ begin
         sum_result := sum_result + result[h, w];
     WriteLn('                 ', sum_result);
   end;
-end;
+end.

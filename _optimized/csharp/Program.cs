@@ -20,7 +20,7 @@ namespace ConsoleApp
         private static readonly float MaxY = 1.12f;
         private static readonly float ScaleX = (MaxX - MinX) / Width;
         private static readonly float ScaleY = (MaxY - MinY) / Height;
-        private const int MaxIters = 256;
+        private static readonly int MaxIters = 256;
         private static readonly int NumCpu = Environment.ProcessorCount;
         private static readonly Vector256<float> MinYVec = Vector256.Create(MinY);
         private static readonly Vector256<float> ScaleXVec = Vector256.Create(ScaleX);
@@ -38,9 +38,9 @@ namespace ConsoleApp
         {
             var options = new ParallelOptions
             {
-                MaxDegreeOfParallelism = NumCpu
+                MaxDegreeOfParallelism = 10 * NumCpu
             };
-            Parallel.For(0, Height / 2, options, Mandelbrot_0_simd);
+            Parallel.For(0, Height / 2,options, Mandelbrot_0_simd);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

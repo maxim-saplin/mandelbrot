@@ -5,7 +5,9 @@
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <RootNamespace>ConsoleApp</RootNamespace>
-        <PublishAot></PublishAot>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <PublishReadyToRunComposite>true</PublishReadyToRunComposite>
+        <PublishReadyToRunCrossgen2ExtraArgs>--instruction-set:avx</PublishReadyToRunCrossgen2ExtraArgs>
     </PropertyGroup>
 
 </Project>

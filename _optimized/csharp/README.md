@@ -1,3 +1,7 @@
+
+V3, AVX512 and further optimisation
+AoT: Avg: 26.50ms, StdDev: 15.37%, 78563750
+
 Fine tuned and optimized versions of algos, not apple-to-apple comparisons
 
 

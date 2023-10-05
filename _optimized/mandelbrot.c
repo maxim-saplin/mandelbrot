@@ -1,3 +1,6 @@
+// gcc main.c -mavx2 -fopenmp -Ofast
+// Avg: 22.51ms, StdDev: 25.9203%, sum 78563750
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <immintrin.h>

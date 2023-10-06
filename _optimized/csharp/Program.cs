@@ -170,7 +170,7 @@ namespace ConsoleApp
                 _pResult = pr;
 
                 var measurements = new List<double>();
-                for (int i = -1; i < 1000; i++)
+                for (int i = -1; i < 10; i++)
                 {
                     Console.Write(i + 1 + "\t ");
                     Console.Out.Flush();

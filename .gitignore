@@ -183,3 +183,4 @@ _optimized/csharp/bin/Release/net7.0/
 _optimized/csharp/obj/
 _optimized/mandelbrot_parallel.exe
 _optimized/output.txt
+.DS_Store

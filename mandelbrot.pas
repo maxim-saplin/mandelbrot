@@ -16,8 +16,8 @@ type
     function Mul(c: ComplexNumber): ComplexNumber;
     function Add(c: ComplexNumber): ComplexNumber;
   end;
-  
-  TMatrix = array of array of Integer;
+
+  ComplexMatrix = array of array of ComplexNumber;
 
 var
   height, width, MAX_ITERS: Integer;
@@ -46,27 +46,12 @@ begin
   Result := ComplexNumber.Create(re+c.re, im+c.im);
 end;
 
-function mandelbrot_0(c: ComplexNumber): Integer;
+function CalculateMandelbrotMatrix: ComplexMatrix;
 var
-  z: ComplexNumber;
-  i: Integer;
-begin
-  z := c;
-  Result := 0;
-  for i := 1 to MAX_ITERS do
-  begin
-    if z.Abs > 2 then
-      Break;
-    z := z.Mul(z).Add(c);
-    Inc(Result);
-  end;
-end;
-
-function mandelbrot: TMatrix;
-var
-  h, w, output_val: Integer;
+  h, w: Integer;
   cy, cx: Real;
-  c: ComplexNumber;
+  c, z: ComplexNumber;
+  output_val: Integer;
 begin
   SetLength(Result, height, width);
   for h := 0 to height - 1 do
@@ -76,24 +61,33 @@ begin
     begin
       cx := min_x + w * scalex;
       c := ComplexNumber.Create(cx, cy);
-      output_val := mandelbrot_0(c);
-      Result[h][w] := output_val;
+      z := ComplexNumber.Create(0, 0);
+      output_val := 0;
+      while (output_val < MAX_ITERS) and (z.Abs <= 2) do
+      begin
+        z := z.Mul(z).Add(c);
+        Inc(output_val);
+      end;
+      Result[h][w] := ComplexNumber.Create(output_val, 0);
     end;
   end;
 end;
 
-function sumMatrix(matrix: TMatrix): Integer;  // Changed the return type to 32-bit Integer
+function SumMandelbrotMatrix(matrix: ComplexMatrix): Integer;
 var
   h, w: Integer;
+  output_val: Integer;
 begin
-  Result := 0;
+  output_val := 0;
   for h := 0 to height - 1 do
     for w := 0 to width - 1 do
-      Result += matrix[h][w];
+      output_val += Round(matrix[h][w].re);
+  Result := output_val;
 end;
 
-var 
-  m: TMatrix;
+var
+  m: ComplexMatrix;
+
 begin
   height := 1024;
   width := 1024;
@@ -104,15 +98,14 @@ begin
   scalex := (max_x - min_x) / width;
   scaley := (max_y - min_y) / height;
   MAX_ITERS := 256;
-  
+
   for i := 1 to 3 do
   begin
-    Write(i, '    ');
+    Write(i, '  ');
     startTime := GetTickCount64;
-    m := mandelbrot();
+    m := CalculateMandelbrotMatrix;
     endTime := GetTickCount64;
     execTime := endTime - startTime;
-    Write('Execution Time: ', execTime / 1000 :0:3, ' sec     ');
-    WriteLn('                 ', sumMatrix(m));
+    WriteLn('Execution time: ', execTime / 1000 :0:3, ' sec     Sum: ', SumMandelbrotMatrix(m));
   end;
 end.

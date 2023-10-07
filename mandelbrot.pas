@@ -1,4 +1,4 @@
-// fpc -Mobjfpc -O3 -CfSSE64 -Ct mandelbrot.pas
+// fpc -OG -Sc mandelbrot.pas
 
 program Mandelbrot;
 
@@ -92,6 +92,8 @@ begin
       Result += matrix[h][w];
 end;
 
+var 
+  m: TMatrix;
 begin
   height := 1024;
   width := 1024;
@@ -103,16 +105,14 @@ begin
   scaley := (max_y - min_y) / height;
   MAX_ITERS := 256;
   
-  var m: TMatrix;  // Define the m variable here
-  
   for i := 1 to 3 do
   begin
-    Write(i, ' ', 'Start... ');
+    Write(i, '    ');
     startTime := GetTickCount64;
     m := mandelbrot();
     endTime := GetTickCount64;
     execTime := endTime - startTime;
-    WriteLn('Execution Time: ', execTime / 1000 :0:3, ' sec');
+    Write('Execution Time: ', execTime / 1000 :0:3, ' sec     ');
     WriteLn('                 ', sumMatrix(m));
   end;
 end.

@@ -188,3 +188,5 @@ _optimized/output.txt
 _optimized/a.out
 
 _optimized/csharp/output.txt
+
+mandelbrot.o

@@ -1,112 +1,116 @@
+// fpc -Mobjfpc -O3 -CfSSE64 -Ct mandelbrot.pas
+
 program Mandelbrot;
 
-uses SysUtils, Math, DateUtils;
+{$mode objfpc}{$H+}
 
-const
-  height    = 1024;
-  width     = 1024;
-  min_x     = -2.0;
-  max_x     = 0.47;
-  min_y     = -1.12;
-  max_y     = 1.12;
-  scalex    = (max_x - min_x) / width;
-  scaley    = (max_y - min_y) / height;
-  MAX_ITERS = 256;
+uses
+  SysUtils, Classes;
 
 type
-  TComplex = record
-    Re, Im: Double;
+  ComplexNumber = class
+    re: Real;
+    im: Real;
+    constructor Create(RePart: Real; ImPart: Real);
+    function Abs: Real;
+    function Mul(c: ComplexNumber): ComplexNumber;
+    function Add(c: ComplexNumber): ComplexNumber;
   end;
+  
+  TMatrix = array of array of Integer;
 
-  TOutputArray = array[0..height - 1, 0..width - 1] of Integer;
-
-function Complex(Re, Im: Double): TComplex;
-begin
-  with Result do
-  begin
-    Re := Re;
-    Im := Im;
-  end;
-end;
-
-function AddComplex(a, b: TComplex): TComplex;
-begin
-  with Result do
-  begin
-    Re := a.Re + b.Re;
-    Im := a.Im + b.Im;
-  end;
-end;
-
-function MultComplex(a, b: TComplex): TComplex;
-begin
-  with Result do
-  begin
-    Re := a.Re * b.Re - a.Im * b.Im;
-    Im := a.Re * b.Im + a.Im * b.Re;
-  end;
-end;
-
-function AbsComplex(a: TComplex): Double;
-begin
-  Result := sqrt(a.Re * a.Re + a.Im * a.Im);
-end;
-
-function mandelbrot_0(c: TComplex): Integer;
 var
-  z: TComplex;
-  nv, i: Integer;
+  height, width, MAX_ITERS: Integer;
+  min_x, max_x, min_y, max_y, scalex, scaley: Real;
+  i: Integer;
+  startTime, endTime, execTime: QWord;
+
+constructor ComplexNumber.Create(RePart: Real; ImPart: Real);
+begin
+  re := RePart;
+  im := ImPart;
+end;
+
+function ComplexNumber.Abs: Real;
+begin
+  Result := Sqrt(re*re + im*im);
+end;
+
+function ComplexNumber.Mul(c: ComplexNumber): ComplexNumber;
+begin
+  Result := ComplexNumber.Create(re*c.re - im*c.im, im*c.re + re*c.im);
+end;
+
+function ComplexNumber.Add(c: ComplexNumber): ComplexNumber;
+begin
+  Result := ComplexNumber.Create(re+c.re, im+c.im);
+end;
+
+function mandelbrot_0(c: ComplexNumber): Integer;
+var
+  z: ComplexNumber;
+  i: Integer;
 begin
   z := c;
-  nv := 0;
-  for i := 1 to MAX_ITERS - 1 do
+  Result := 0;
+  for i := 1 to MAX_ITERS do
   begin
-    if AbsComplex(z) > 2 then
+    if z.Abs > 2 then
       Break;
-    z := AddComplex(MultComplex(z, z), c);
-    nv := nv + 1;
+    z := z.Mul(z).Add(c);
+    Inc(Result);
   end;
-  Result := nv;
 end;
 
-function mandelbrot(): TOutputArray;
+function mandelbrot: TMatrix;
+var
+  h, w, output_val: Integer;
+  cy, cx: Real;
+  c: ComplexNumber;
+begin
+  SetLength(Result, height, width);
+  for h := 0 to height - 1 do
+  begin
+    cy := min_y + h * scaley;
+    for w := 0 to width - 1 do
+    begin
+      cx := min_x + w * scalex;
+      c := ComplexNumber.Create(cx, cy);
+      output_val := mandelbrot_0(c);
+      Result[h][w] := output_val;
+    end;
+  end;
+end;
+
+function sumMatrix(matrix: TMatrix): Int64;
 var
   h, w: Integer;
-  cy, cx: Double;
-  output: TOutputArray;
 begin
+  Result := 0;
   for h := 0 to height - 1 do
-    begin
-      cy := min_y + h * scaley;
-      for w := 0 to width - 1 do
-      begin
-        cx := min_x + w * scalex;
-        output[h, w] := mandelbrot_0(Complex(cx, cy));
-      end;
-    end;
-  Result := output;
+    for w := 0 to width - 1 do
+      Result += matrix[h][w];
 end;
 
-var
-  i, h, w, sum_result: Integer;
-  start_time, end_time: TDateTime;
-  execution_time: Double;
-  result: TOutputArray;
-
 begin
+  height := 1024;
+  width := 1024;
+  min_x := -2.0;
+  max_x := 0.47;
+  min_y := -1.12;
+  max_y := 1.12;
+  scalex := (max_x - min_x) / width;
+  scaley := (max_y - min_y) / height;
+  MAX_ITERS := 256;
+  
   for i := 1 to 3 do
   begin
-    WriteLn(i, ' ');
-    start_time := Now();
+    Write(i, ' ', 'Start... ');
+    startTime := GetTickCount;
     result := mandelbrot();
-    end_time := Now();
-    execution_time := MilliSecondsBetween(end_time, start_time) / 1000;
-    Write('Execution Time: ', execution_time:0:3, ' ');
-
-    sum_result := 0;
-    for h := 0 to height - 1 do
-      for w := 0 to width - 1 do
-        sum_result := sum_result + result[h, w];
-    WriteLn('                 ', sum_result);
+    endTime := GetTickCount;
+    execTime := endTime - startTime;
+    WriteLn('Execution Time: ', execTime / 1000 :0:3, ' sec');
+    WriteLn('                 ', sumMatrix(result));
   end;
 end.

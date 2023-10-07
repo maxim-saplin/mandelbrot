@@ -22,6 +22,8 @@ Ubuntu 22.04.3 LTS, 64 bit, Intel Core i5-8257U @ 1.4GHz x 2, VMWare Workstation
 | Go + cust Complex64       | 0,35           | 1.21.1  | 78513415  | Different sum |
 | Dart + cust Complex (JIT) | 0,64           | 3.1.0   | 78513425  |               |
 | Dart + cust Complex (AoT) | 0,42           | 3.1.0   | 78513425  |               |
+| Dart + cstcomp + JS + node| 0,75           | 3.1.0   | 78513425  |               |
+| Dart + cstcomp + JS + bun | 0,84           | 3.1.0   | 78513425  |               |
 | Rust + num-complex        | 0,73           | 1.72.1  | 78513425  |               |
 | Rust + custom Complex     | 0,32           | 1.72.1  | 78513425  |               |
 | C# + custom Complex (JIT) | 0,37           | 7.0.111 | 78513425  |               |

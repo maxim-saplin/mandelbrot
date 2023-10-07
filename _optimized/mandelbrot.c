@@ -1,3 +1,11 @@
+// gcc mandelbrot.c -mavx2 -fopenmp -Ofast
+//
+// V2
+// Avg: 13.99ms, StdDev: 26.7798%
+// 
+// V1
+// Avg: 22.51ms, StdDev: 25.9203%, sum 78563750
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <immintrin.h>

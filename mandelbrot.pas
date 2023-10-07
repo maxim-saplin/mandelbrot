@@ -82,7 +82,7 @@ begin
   end;
 end;
 
-function sumMatrix(matrix: TMatrix): Int64;
+function sumMatrix(matrix: TMatrix): Integer;  // Changed the return type to 32-bit Integer
 var
   h, w: Integer;
 begin
@@ -103,14 +103,16 @@ begin
   scaley := (max_y - min_y) / height;
   MAX_ITERS := 256;
   
+  var m: TMatrix;  // Define the m variable here
+  
   for i := 1 to 3 do
   begin
     Write(i, ' ', 'Start... ');
-    startTime := GetTickCount;
-    result := mandelbrot();
-    endTime := GetTickCount;
+    startTime := GetTickCount64;
+    m := mandelbrot();
+    endTime := GetTickCount64;
     execTime := endTime - startTime;
     WriteLn('Execution Time: ', execTime / 1000 :0:3, ' sec');
-    WriteLn('                 ', sumMatrix(result));
+    WriteLn('                 ', sumMatrix(m));
   end;
 end.

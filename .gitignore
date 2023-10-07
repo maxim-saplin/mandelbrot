@@ -184,3 +184,7 @@ _optimized/csharp/obj/
 _optimized/mandelbrot_parallel.exe
 _optimized/output.txt
 .DS_Store
+
+_optimized/a.out
+
+_optimized/csharp/output.txt

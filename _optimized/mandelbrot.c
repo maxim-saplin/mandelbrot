@@ -1,5 +1,10 @@
 // gcc mandelbrot.c -mavx2 -fopenmp -Ofast
 //
+// V3, dimensional loop unroll, sum 78568648
+// Avg: 13.72ms, StdDev: 31.1843%
+//
+// gcc mandelbrot.c -mavx2 -fopenmp -Ofast
+//
 // V2
 // Avg: 13.99ms, StdDev: 26.7798%
 // 

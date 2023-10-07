@@ -3,6 +3,11 @@
 // dart compile exe mandelbrot.dart   - 0,42 sec
 // dart mandelbrot.dart               - Unit32List,  0,60 - 0,64 sec
 // dart mandelbrot.dart               - Unit32List,  0,44 - 0,46 sec
+//
+// JS, remove dart:io and replace stdout with print, sum 78513425
+// dart compile js mandelbrot.dart -O4 --no-source-map
+// node out.js - 0.75
+// bun out.js - 0.84
 
 import 'dart:io';
 import 'dart:math' as math;

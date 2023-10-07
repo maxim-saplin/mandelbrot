@@ -1,7 +1,6 @@
 // fpc -OG -Sc mandelbrot.pas
 
 program Mandelbrot;
-
 {$mode objfpc}{$H+}
 
 uses
@@ -46,7 +45,7 @@ begin
   Result := ComplexNumber.Create(re+c.re, im+c.im);
 end;
 
-function CalculateMandelbrotMatrix: ComplexMatrix;
+function CalculateMandelbrotMatrix(height, width: Integer): ComplexMatrix;
 var
   h, w: Integer;
   cy, cx: Real;
@@ -103,9 +102,9 @@ begin
   begin
     Write(i, '  ');
     startTime := GetTickCount64;
-    m := CalculateMandelbrotMatrix;
+    m := CalculateMandelbrotMatrix(height, width);
     endTime := GetTickCount64;
     execTime := endTime - startTime;
-    WriteLn('Execution time: ', execTime / 1000 :0:3, ' sec     Sum: ', SumMandelbrotMatrix(m));
+    WriteLn('Execution time: ', execTime / 1000: 0: 3, ' sec     Sum: ', SumMandelbrotMatrix(m));
   end;
 end.

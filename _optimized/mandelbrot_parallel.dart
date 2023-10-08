@@ -68,7 +68,6 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:isolate';
 import 'dart:async';
-import 'dart:io';
 
 const int height = 1024;
 const int width = 1024;
@@ -110,68 +109,87 @@ Uint8List mandelbrot(int start, int end, [bool returnBigList = false]) {
     cxx[w] = min_x + w * scalex;
   }
 
-  //var count255 = 0;
+// Expanded `variables` to hold all local variables and constants
+  Float32List variables = Float32List(15);
+
+  // Mapping of old variable names and constants to `variables` indexes
+  // variables[0] -> cx
+  // variables[1] -> cy
+  // variables[2] -> zx
+  // variables[3] -> zy
+  // variables[4] -> zx2
+  // variables[5] -> zy2
+  // variables[6] -> r1
+  // variables[7] -> dx1
+  // variables[8] -> dy1
+  // variables[9] -> r2
+  // variables[10] -> dx2
+  // variables[11] -> r3
+  // variables[12] -> dx3
+  // variables[13] -> dy3
+  // variables[14] -> 4.0 (constant used in the condition)
+
+  variables[6] = 0.607 * 0.607;
+  variables[7] = 0.133;
+  variables[8] = 0.0386;
+  variables[9] = 0.248 * 0.248;
+  variables[10] = 1.0;
+  variables[11] = 0.343 * 0.343;
+  variables[12] = -0.0089;
+  variables[13] = 0.2634;
+  variables[14] = 4.0;
 
   int index = 0;
   for (int h = start; h < end; h++) {
-    final double cy = min_y + h * scaley;
+    variables[1] = min_y + h * scaley; // cy
 
     for (int w = 0; w < width; w++) {
-      final double cx = cxx[w];
+      variables[0] = cxx[w]; // cx
       int nv = 0;
-      double zx = cx, zy = cy;
 
-      const r1 = 0.607 * 0.607;
-      const dx1 = 0.133;
-      const dy1 = 0.0386;
-
-      const r2 = 0.248 * 0.248;
-      const dx2 = 1.0;
-
-      const r3 = 0.343 * 0.343;
-      const dx3 = -0.0089;
-      const dy3 = 0.2634;
-
-      // Skipping calculation for known to be madelbrot area
-      if (cx > -0.75 &&
-              cx < 0.23 &&
-              ((cx + dx1) * (cx + dx1) + (cy + dy1) * (cy + dy1) < r1) ||
-          ((cx + dx2) * (cx + dx2) + cy * cy < r2) ||
-          (cx > 0.23 && (cx + dx3) * (cx + dx3) + (cy + dy3) * (cy + dy3) < r3))
-      //(cx > -0.55 && cx < 0.272 && cy > -0.48) ||
-      //(cx > -0.33 && cx < 0.1 && cy > -0.6) ||
-      //(cx > -1.17 && cx < -0.83 && cy > -0.18))
-      {
+      if (variables[0] > -0.75 &&
+              variables[0] < 0.23 &&
+              ((variables[0] + variables[7]) * (variables[0] + variables[7]) +
+                      (variables[1] + variables[8]) *
+                          (variables[1] + variables[8]) <
+                  variables[6]) ||
+          ((variables[0] + variables[10]) * (variables[0] + variables[10]) +
+                  variables[1] * variables[1] <
+              variables[9]) ||
+          (variables[0] > 0.23 &&
+              (variables[0] + variables[12]) * (variables[0] + variables[12]) +
+                      (variables[1] + variables[13]) *
+                          (variables[1] + variables[13]) <
+                  variables[11])) {
         nv = MAX_ITERS - 1;
-        //count255++;
       } else {
         while (nv < MAX_ITERS) {
-          double zzx = zx * zx;
-          double zzy = zy * zy;
+          variables[2] = variables[0] * variables[0]; // zx * zx
+          variables[3] = variables[1] * variables[1]; // zy * zy
 
-          if ((zzx + zzy) > 4.0) {
+          if ((variables[2] + variables[3]) > variables[14]) {
             break;
           }
 
-          double new_zx = (zzx - zzy) + cx;
-          zy = 2 * zx * zy + cy;
-          zx = new_zx;
+          variables[4] = (variables[2] - variables[3]) + variables[0]; // new_zx
+          variables[1] = 2 * variables[0] * variables[1] + variables[1]; // zy
+          variables[0] = variables[4]; // zx
           nv++;
 
           if (nv >= MAX_ITERS - 1) {
             break;
           }
 
-          zzx = zx * zx;
-          zzy = zy * zy;
+          variables[2] = variables[0] * variables[0]; // zzx
+          variables[3] = variables[1] * variables[1]; // zzy
 
-          if ((zzx + zzy) > 4.0) {
+          if ((variables[2] + variables[3]) > variables[14]) {
             break;
           }
 
-          new_zx = (zzx - zzy) + cx;
-          zy = 2 * zx * zy + cy;
-          zx = new_zx;
+          variables[4] = (variables[2] - variables[3]) + variables[0]; // new_zx
+          variables[1] = 2 * variables[0] * variables[1] + variables[1]; // zy
+          variables[0] = variables[4]; // zx
 
           nv++;
         }

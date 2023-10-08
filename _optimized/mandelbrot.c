@@ -14,7 +14,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <immintrin.h>
-#include <omp.h>
 #include <memory.h>
 #include <time.h>
 #include <math.h>
@@ -29,17 +28,16 @@ typedef unsigned int uint;
 #define SCALE_X ((MAX_X - MIN_X) / WIDTH)
 #define SCALE_Y ((MAX_Y - MIN_Y) / HEIGHT)
 #define MAX_ITERS 256
-#define NUM_CPU omp_get_num_procs()
 #define OFFSET(h, w) ((h) * WIDTH + (w))
 
-void inline __attribute__((always_inline)) Mandelbrot_0_simd(int h, uint *pResult) {
+__m256 MinYVec;
+__m256 ScaleXVec;
+__m256 ScaleYVec;
+__m256 FourVec;
+__m256 DisplacementVector;
+__m256i IdentVector;
 
-    const __m256 MinYVec = _mm256_set1_ps(MIN_Y);
-    const __m256 ScaleXVec = _mm256_set1_ps(SCALE_X);
-    const __m256 ScaleYVec = _mm256_set1_ps(SCALE_Y);
-    const __m256 FourVec = _mm256_set1_ps(4.0f);
-    const __m256 DisplacementVector = _mm256_set_ps(7.0f, 6.0f, 5.0f, 4.0f, 3.0f, 2.0f, 1.0f, 0.0f);
-    const __m256i IdentVector = _mm256_set1_epi32(1);
+void inline __attribute__((always_inline)) Mandelbrot_0_simd(int h, uint *pResult) {
 
     const int offset = h * WIDTH;
     const int mirrorOffset = (HEIGHT - h - 1) * WIDTH;
@@ -51,7 +49,7 @@ void inline __attribute__((always_inline)) Mandelbrot_0_simd(int h, uint *pResul
         const __m256 cyVecSet = _mm256_set1_ps((float) h);
         __m256 cxVec1 = _mm256_fmadd_ps(DisplacementVector, ScaleXVec, cxVec1set);
         __m256 cxVec2 = _mm256_fmadd_ps(DisplacementVector, ScaleXVec, cxVec2set);
-        __m256 cyVec = _mm256_fmadd_ps(cyVecSet,ScaleYVec, MinYVec);
+        __m256 cyVec = _mm256_fmadd_ps(cyVecSet, ScaleYVec, MinYVec);
         __m256 zReVec1 = _mm256_setzero_ps();
         __m256 zImVec1 = _mm256_setzero_ps();
         __m256 zReVec2 = _mm256_setzero_ps();
@@ -97,8 +95,8 @@ void inline __attribute__((always_inline)) Mandelbrot_0_simd(int h, uint *pResul
             __m256i breakVec2_epi32 = _mm256_castps_si256(cmpVec2);
             breakVec1_epi32 = _mm256_add_epi32(breakVec1_epi32, IdentVector);
             breakVec2_epi32 = _mm256_add_epi32(breakVec2_epi32, IdentVector);
-            breakVec1 =_mm256_or_si256(breakVec1, breakVec1_epi32);
-            breakVec2 =_mm256_or_si256(breakVec2, breakVec2_epi32);
+            breakVec1 = _mm256_or_si256(breakVec1, breakVec1_epi32);
+            breakVec2 = _mm256_or_si256(breakVec2, breakVec2_epi32);
             __m256i nvVec1_epi32 = _mm256_andnot_si256(breakVec1, IdentVector);
             __m256i nvVec2_epi32 = _mm256_andnot_si256(breakVec2, IdentVector);
             nvVec1 = _mm256_add_epi32(nvVec1_epi32, nvVec1);
@@ -155,16 +153,20 @@ void inline __attribute__((always_inline)) Mandelbrot_0_simd(int h, uint *pResul
     }
 }
 
-void MandelbrotSimd(uint *pResult) {
-#pragma omp parallel for num_threads(4 * NUM_CPU) schedule(static) shared(pResult) default(none)
+void inline __attribute__((always_inline)) MandelbrotSimd(uint *pResult) {
+    MinYVec = _mm256_set1_ps(MIN_Y);
+    ScaleXVec = _mm256_set1_ps(SCALE_X);
+    ScaleYVec = _mm256_set1_ps(SCALE_Y);
+    FourVec = _mm256_set1_ps(4.0f);
+    DisplacementVector = _mm256_set_ps(7.0f, 6.0f, 5.0f, 4.0f, 3.0f, 2.0f, 1.0f, 0.0f);
+    IdentVector = _mm256_set1_epi32(1);
+#pragma omp parallel for schedule(dynamic) shared(pResult) default(none)
     for (int h = 0; h < HEIGHT / 2; h++) {
         Mandelbrot_0_simd(h, pResult);
     }
 }
 
 int main() {
-    printf("NumCpu : %d\n", NUM_CPU);
-    printf("AVX supported: %s\n", _mm256_testz_si256(_mm256_setzero_si256(), _mm256_setzero_si256()) ? "yes" : "no");
     uint *pResult = (uint *) calloc(HEIGHT * WIDTH, sizeof(uint));
 
 

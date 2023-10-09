@@ -20,9 +20,7 @@ namespace ConsoleApp
 
         // Introducing float versions of the above double variables
         static readonly float MinXf = (float)MinX;
-        static readonly float MaxXf = (float)MaxX;
         static readonly float MinYf = (float)MinY;
-        static readonly float MaxYf = (float)MaxY;
         static readonly float ScaleXf = (float)ScaleX;
         static readonly float ScaleYf = (float)ScaleY;
 

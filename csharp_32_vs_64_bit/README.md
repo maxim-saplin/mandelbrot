@@ -12,6 +12,10 @@ VMWare, Ubuntu, Intel® Core™ i5-8257U CPU @ 1.40GHz × 2:
 Avg (double): 355.99ms, StdDev: 13.13%, sum 78513425
 Avg (float): 372.59ms, StdDev: 1.13%, sum 78520223
 
+AMD 5900x:
+Avg (double): 185,80ms, StdDev: 0,97%, sum 78513425
+Avg (float): 207,49ms, StdDev: 0,75%, sum 78520223
+
 ### dotnet publish -c Release
 
 M1 Pro:

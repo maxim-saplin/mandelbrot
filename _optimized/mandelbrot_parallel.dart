@@ -68,7 +68,6 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:isolate';
 import 'dart:async';
-import 'dart:io';
 
 const int height = 1024;
 const int width = 1024;

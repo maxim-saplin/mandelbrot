@@ -1,14 +1,13 @@
-// gcc mandelbrot.c -mavx2 -fopenmp -Ofast
+// gcc mandelbrot.c -mavx2 -fopenmp -Ofast -mfma
+// V4. 32 bit, Avg: 11.39ms, StdDev: 40.5714%
 //
-// V3, dimensional loop unroll, sum 78568648
+// V3, 32bit float, SIMD, dimensional loop unroll, sum 78568648
 // Avg: 13.72ms, StdDev: 31.1843%
 //
-// gcc mandelbrot.c -mavx2 -fopenmp -Ofast
-//
-// V2
+// V2, 32bit float, SIMD
 // Avg: 13.99ms, StdDev: 26.7798%
 // 
-// V1
+// V1, 32bit float, SIMD
 // Avg: 22.51ms, StdDev: 25.9203%, sum 78563750
 
 #include <stdio.h>

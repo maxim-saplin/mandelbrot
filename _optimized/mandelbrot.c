@@ -1,5 +1,5 @@
 // gcc mandelbrot.c -mavx2 -fopenmp -Ofast -mfma
-// V4. 32 bit, Avg: 11.39ms, StdDev: 40.5714%
+// V4. 32 bit, avx, fma, 2d loop unroll, pipelining, dynamic scheduler omp, Avg: 11.39ms, StdDev: 40.5714%
 //
 // V3, 32bit float, SIMD, dimensional loop unroll, sum 78568648
 // Avg: 13.72ms, StdDev: 31.1843%

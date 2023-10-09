@@ -1,7 +1,5 @@
 Testing how float precision/type size (64-bit double and 32-bit float) affect performance
 
-## 64-bit `double`
-
 ### dotnet run -c Release
 
 M1 Pro:  

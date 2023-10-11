@@ -1,110 +1,93 @@
 // fpc -OG -Sc mandelbrot.pas
 
-program Mandelbrot;
+program mandelbrot;
 {$mode objfpc}{$H+}
 
-uses
-  SysUtils, Classes;
+uses uComplex, sysutils;
 
-type
-  ComplexNumber = class
-    re: Real;
-    im: Real;
-    constructor Create(RePart: Real; ImPart: Real);
-    function Abs: Real;
-    function Mul(c: ComplexNumber): ComplexNumber;
-    function Add(c: ComplexNumber): ComplexNumber;
-  end;
 
-  ComplexMatrix = array of array of ComplexNumber;
+const
+  Height = 1024;
+  Width = 1024;
+  min_x = -2.0;
+  max_x = 0.47;
+  min_y = -1.12;
+  max_y = 1.12;
+  scalex = (max_x - min_x) / width;
+  scaley = (max_y - min_y) / height;
+  MAX_ITERS = 256;
 
 var
-  height, width, MAX_ITERS: Integer;
-  min_x, max_x, min_y, max_y, scalex, scaley: Real;
+  Result: array [0..height-1, 0..width-1] of integer;
+  i, h, w: Integer;
+  start_time, end_time, execution_time: TDateTime;
+  sum_result: Int64;
+  fp: TextFile;
+
+
+function Mandelbrot_0(const c: Complex): Integer;
+var
+  z: Complex;
   i: Integer;
-  startTime, endTime, execTime: QWord;
-
-constructor ComplexNumber.Create(RePart: Real; ImPart: Real);
 begin
-  re := RePart;
-  im := ImPart;
+  z := c;
+  Result := 0;
+  for i := 1 to MAX_ITERS do
+  begin
+    if uComplex.cmod(z) > 2 then
+      Break;
+    z := z*z + c;
+    Inc(Result);
+  end;
 end;
 
-function ComplexNumber.Abs: Real;
-begin
-  Result := Sqrt(re*re + im*im);
-end;
-
-function ComplexNumber.Mul(c: ComplexNumber): ComplexNumber;
-begin
-  Result := ComplexNumber.Create(re*c.re - im*c.im, im*c.re + re*c.im);
-end;
-
-function ComplexNumber.Add(c: ComplexNumber): ComplexNumber;
-begin
-  Result := ComplexNumber.Create(re+c.re, im+c.im);
-end;
-
-function CalculateMandelbrotMatrix(height, width: Integer): ComplexMatrix;
+procedure Mandelbrot();
 var
   h, w: Integer;
-  cy, cx: Real;
-  c, z: ComplexNumber;
-  output_val: Integer;
+  point: Complex;
 begin
-  SetLength(Result, height, width);
-  for h := 0 to height - 1 do
+  for h := 0 to Height - 1 do
   begin
-    cy := min_y + h * scaley;
-    for w := 0 to width - 1 do
+    point.im := min_y + h * scaley;
+    for w := 0 to Width - 1 do
     begin
-      cx := min_x + w * scalex;
-      c := ComplexNumber.Create(cx, cy);
-      z := ComplexNumber.Create(0, 0);
-      output_val := 0;
-      while (output_val < MAX_ITERS) and (z.Abs <= 2) do
-      begin
-        z := z.Mul(z).Add(c);
-        Inc(output_val);
-      end;
-      Result[h][w] := ComplexNumber.Create(output_val, 0);
+      point.re := min_x + w * scalex;
+      Result[h, w] := Mandelbrot_0(point);
     end;
   end;
 end;
 
-function SumMandelbrotMatrix(matrix: ComplexMatrix): Integer;
-var
-  h, w: Integer;
-  output_val: Integer;
-begin
-  output_val := 0;
-  for h := 0 to height - 1 do
-    for w := 0 to width - 1 do
-      output_val += Round(matrix[h][w].re);
-  Result := output_val;
-end;
-
-var
-  m: ComplexMatrix;
 
 begin
-  height := 1024;
-  width := 1024;
-  min_x := -2.0;
-  max_x := 0.47;
-  min_y := -1.12;
-  max_y := 1.12;
-  scalex := (max_x - min_x) / width;
-  scaley := (max_y - min_y) / height;
-  MAX_ITERS := 256;
-
-  for i := 1 to 3 do
+  for i := 1 to 10 do
   begin
-    Write(i, '  ');
-    startTime := GetTickCount64;
-    m := CalculateMandelbrotMatrix(height, width);
-    endTime := GetTickCount64;
-    execTime := endTime - startTime;
-    WriteLn('Execution time: ', execTime / 1000: 0: 3, ' sec     Sum: ', SumMandelbrotMatrix(m));
+    Write(i, ' ');
+    start_time := Now();
+    Mandelbrot();
+    end_time := Now();
+    execution_time := (end_time - start_time);
+    Write('Execution Time: ', Round(Frac(execution_time) * MSecsPerDay), 'ms ');
+    sum_result := 0;
+    for h := 0 to Height - 1 do
+      for w := 0 to Width - 1 do
+        sum_result += Result[h, w];
+    Write(sum_result:0);
+    Writeln;
+  end;
+  AssignFile(fp, 'output.txt');
+  try
+    Rewrite(fp);
+    for h := 0 to Height - 1 do
+      begin
+        for w := 0 to Width - 2 do
+          Write(fp, Result[h, w], ',');
+        if h = Height - 1 then
+          Write(fp, Result[h, Width - 1])
+        else
+           Write(fp, Result[h, Width - 1], ',');
+        Writeln(fp);
+      end;
+  finally
+    CloseFile(fp);
   end;
 end.

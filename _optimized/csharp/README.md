@@ -1,5 +1,5 @@
 
-V4, unroll, fma, pioelining
+V4, unroll, fma, pipelining
 AoT: Avg: 23.63ms, StdDev: 39.50%
 
 V3, AVX512 and further optimisation

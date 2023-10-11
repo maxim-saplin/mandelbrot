@@ -193,3 +193,5 @@ mandelbrot.o
 
 bin/
 obj/
+
+output.txt

@@ -1,4 +1,5 @@
 // fpc -OG -Sc mandelbrot.pas
+// 0,93, sum 78801988
 
 program mandelbrot;
 {$mode objfpc}{$H+}

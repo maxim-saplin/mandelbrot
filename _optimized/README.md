@@ -1,6 +1,8 @@
-Sqeezing every bit of performance.
+Sqeezing every bit of performance. Algo and precision can be changed, the check SUM must not be out +/-1% range from 78513425, the produced result must be a valid mabdelbrot picture (use plot.py to verify), you can't pre-calculate the values (store ready results and output them as-is).
 
-Ubuntu 22.04.3 LTS, 64 bit, Intel Core i5-8257U @ 1.4GHz x 2, VMWare Workstation Player 17.0.1
+When measuring the implementation 11 runs of `mandelbrot` subroutine are conducted, the 1st run is a warm-up one and not taken into consideration. The code is started 3-5 times, should there be significant deviations from run-to-run 2nd best result is taken.
+
+Test enviroment: Ubuntu 22.04.3 LTS, 64 bit, Intel Core i5-8257U @ 1.4GHz x 2, VMWare Workstation Player 17.0.1
 
 | Language/variant                            | Current                         | Original         |
 |---------------------------------------------|---------------------------------|------------------|

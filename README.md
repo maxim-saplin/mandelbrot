@@ -16,6 +16,7 @@ Ubuntu 22.04.3 LTS, 64 bit, Intel Core i5-8257U @ 1.4GHz x 2, VMWare Workstation
 | Python + without NumPy    | 9,8            | 3.11.15 | 78513425  |               |
 | Python + w/o NP + Numba   | 0,29           | 3.11.15 | 78513473  | Diff, fastmth |
 | Python+w/o NP+Numba(prng) | 0,19           | 3.11.15 | 78513473  | Diff, fst, prl|
+| Pascal                    | 0,93           | 3.2.2   | 78801988  | Free pascal   |
 | JavaScript +cstcomp (Bun) | 0,90           | 1.0.3   | 78513425  |               |
 | JavaScript +cstcomp (Node)| 0,82           | 12.22.9 | 78513425  |               |
 | Go + complex128           | 0,54           | 1.21.1  | 78513415  | Different sum |

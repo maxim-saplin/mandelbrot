@@ -131,16 +131,24 @@ Uint8List mandelbrot(int start, int end, [bool returnBigList = false]) {
       const dx3 = -0.0089;
       const dy3 = 0.2634;
 
+      const r4 = 0.00923 * 0.00923;
+      const dx4 = 0.748;
+      const dy4 = 0.1244;
+
+      // const r5 = 0.00562 * 0.00562;
+      // const dx5 = 1.31;
+
       // Skipping calculation for known to be madelbrot area
-      if (cx > -0.75 &&
-              cx < 0.23 &&
-              ((cx + dx1) * (cx + dx1) + (cy + dy1) * (cy + dy1) < r1) ||
-          ((cx + dx2) * (cx + dx2) + cy * cy < r2) ||
-          (cx > 0.23 && (cx + dx3) * (cx + dx3) + (cy + dy3) * (cy + dy3) < r3))
-      //(cx > -0.55 && cx < 0.272 && cy > -0.48) ||
-      //(cx > -0.33 && cx < 0.1 && cy > -0.6) ||
-      //(cx > -1.17 && cx < -0.83 && cy > -0.18))
-      {
+      if ((cx < 0.23 &&
+                  ((cx + dx1) * (cx + dx1) + (cy + dy1) * (cy + dy1) < r1)) ||
+              ((cx + dx2) * (cx + dx2) + cy * cy < r2) ||
+              (cx > 0.23 &&
+                  cx < 0.353 &&
+                  (cx + dx3) * (cx + dx3) + (cy + dy3) * (cy + dy3) < r3) ||
+              ((cx + dx4) * (cx + dx4) + (cy + dy4) * (cy + dy4) < r4)
+          //((cx + dx5) * (cx + dx5) + cy * cy < r5)
+
+          ) {
         nv = MAX_ITERS - 1;
         //count255++;
       } else {
@@ -226,26 +234,11 @@ void main() async {
   const iterations = 10;
   Uint8List result = Uint8List(0);
   var measurements = <double>[];
-  //var (send1, _, receive1, _) = await spawnIsolates(true);
   final isolateData = MandelbrotRequest(height ~/ 4, height ~/ 2);
-  //final isolateData1 = MandelbrotRequest(0, height ~/ 4);
-  // final isolateData2 = MandelbrotRequest(height ~/ 4, height ~/ 2);
   for (int i = -1; i < iterations; i++) {
     stdout.write('${i + 1}\t ');
     DateTime start_time = DateTime.now();
     var (send1, _, receive1, _) = await spawnIsolates(true);
-
-    //send1!.send(isolateData1);
-    // send2.send(isolateData2);
-
-    // var futures = [receive1.first, receive2.first];
-    // var results = await Future.wait(futures);
-    // var b = BytesBuilder(copy: false);
-    // b.add(results[0][0]);
-    // b.add(results[1][0]);
-    // b.add(results[1][1]);
-    // b.add(results[0][1]);
-    // result = b.toBytes();
 
     send1!.send(isolateData);
 

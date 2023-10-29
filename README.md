@@ -17,6 +17,7 @@ Ubuntu 22.04.3 LTS, 64 bit, Intel Core i5-8257U @ 1.4GHz x 2, VMWare Workstation
 | Python + w/o NP + Numba   | 0,29           | 3.11.15 | 78513473  | Diff, fastmth |
 | Python+w/o NP+Numba(prng) | 0,19           | 3.11.15 | 78513473  | Diff, fst, prl|
 | Ruby                      | 28,5           | 3.0.2   | 79273394  | Different sum |
+| Haskell (ghc)             | 26,4           | 9.4.7   | 78802024  | Different sum |
 | Pascal                    | 0,93           | 3.2.2   | 78801988  | Free pascal   |
 | JavaScript +cstcomp (Bun) | 0,90           | 1.0.3   | 78513425  |               |
 | JavaScript +cstcomp (Node)| 0,82           | 12.22.9 | 78513425  |               |
@@ -33,8 +34,8 @@ Ubuntu 22.04.3 LTS, 64 bit, Intel Core i5-8257U @ 1.4GHz x 2, VMWare Workstation
 | C# + custom Complex (JIT) | 0,37           | 7.0.111 | 78513425  |               |
 | C# + custom Complex (AoT) | 0,33           | 7.0.111 | 78513425  |               |
 | Mojo                      | 0,32           | 0.2.1   | 78513383  | Different sum |
-| gcc                       | 0,69           | 11.4.0  | 78513478  | Different sum |
-| gcc (-O3)                 | 0,32           | 11.4.0  | 78513478  | Different sum |
-| gcc (-Ofast)              | 0,29           | 11.4.0  | 78513478  | Different sum |
+| C (gcc)                   | 0,69           | 11.4.0  | 78513478  | Different sum |
+| C (gcc -O3)               | 0,32           | 11.4.0  | 78513478  | Different sum |
+| C  (gcc -Ofast)           | 0,29           | 11.4.0  | 78513478  | Different sum |
 
 More on Python and Mojo: https://dev.to/maximsaplin/mojo-head-to-head-with-python-and-numba-5bn9

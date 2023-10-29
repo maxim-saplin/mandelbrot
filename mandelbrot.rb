@@ -1,3 +1,5 @@
+# 28.5, sum 79273394
+
 require 'time'
 
 height = 1024

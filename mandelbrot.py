@@ -1,6 +1,7 @@
 # sum 78513425
 # VMWare, Ubuntu, Intel® Core™ i5-8257U CPU @ 1.40GHz × 2
 # 10.8 sec
+# Adding type definitions to the variables and functions didn't seem to give any difference
 
 import time
 import numpy as np

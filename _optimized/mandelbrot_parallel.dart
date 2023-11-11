@@ -98,6 +98,34 @@ void isolateBody(SendPort replyToMainPort) {
   });
 }
 
+List<int> _getIndexes() {
+  int targetSize = (0.65 * (MAX_ITERS - 1)).round();
+  int firstPartSize = (0.6 * targetSize).round();
+  int lastPartSize = (0.05 * targetSize).round();
+  int middlePartSize = targetSize - firstPartSize - lastPartSize;
+
+  List<int> indexes = [];
+
+  // First 60% of indexes
+  for (int i = 0; i < firstPartSize; i++) {
+    indexes.add(i);
+  }
+
+  // Middle 35% of indexes, stretched proportionally
+  double stretchFactor =
+      (MAX_ITERS - 1 - firstPartSize - lastPartSize) / middlePartSize;
+  for (int i = 0; i < middlePartSize; i++) {
+    indexes.add((firstPartSize + i * stretchFactor).round());
+  }
+
+  // Last 5% of indexes
+  for (int i = lastPartSize; i >= 0; i--) {
+    indexes.add(MAX_ITERS - 1 - i);
+  }
+
+  return indexes;
+}
+
 Uint8List mandelbrot(int start, int end, [bool returnBigList = false]) {
   //final output = Uint8List(width * (end - start));
   final output = returnBigList
@@ -110,6 +138,8 @@ Uint8List mandelbrot(int start, int end, [bool returnBigList = false]) {
   }
 
   //var count255 = 0;
+
+  var indexes = _getIndexes();
 
   int index = 0;
   for (int h = start; h < end; h++) {
@@ -152,6 +182,7 @@ Uint8List mandelbrot(int start, int end, [bool returnBigList = false]) {
         nv = MAX_ITERS - 1;
         //count255++;
       } else {
+        var i = 0;
         while (nv < MAX_ITERS) {
           double zzx = zx * zx;
           double zzy = zy * zy;
@@ -163,24 +194,11 @@ Uint8List mandelbrot(int start, int end, [bool returnBigList = false]) {
           double new_zx = (zzx - zzy) + cx;
           zy = 2 * zx * zy + cy;
           zx = new_zx;
-          nv++;
+          nv = indexes[i++];
 
           if (nv >= MAX_ITERS - 1) {
             break;
           }
-
-          zzx = zx * zx;
-          zzy = zy * zy;
-
-          if ((zzx + zzy) > 4.0) {
-            break;
-          }
-
-          new_zx = (zzx - zzy) + cx;
-          zy = 2 * zx * zy + cy;
-          zx = new_zx;
-
-          nv++;
         }
       }
       output[index++] = nv;

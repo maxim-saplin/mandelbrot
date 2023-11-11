@@ -7,7 +7,7 @@ Test enviroment: Ubuntu 22.04.3 LTS, 64 bit, Intel Core i5-8257U @ 1.4GHz x 2, V
 | Language/variant                            | Current                         | Original         |
 |---------------------------------------------|---------------------------------|------------------|
 | C (SIMD + 32 bit + pipelining)              | Avg: 11.39ms, StdDev: 40.57%    | 0,29 sec         |
-| Dart (Mirroring + Isolates + Known regions) | Avg: 19.20ms, StdDev: 14.27%    | 0,42 sec         |
+| Dart (Mirroring + Isolates + Known regions + Spare Indexes) | Avg: 14.2ms, StdDev: 21.2%    | 0,42 sec         |
 | C# (SIMD + 32 bit float + Mirroring )       | Avg: 23.63ms, StdDev: 39.50%    | 0,33 sec         |
 
 

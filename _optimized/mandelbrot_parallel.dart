@@ -1,3 +1,7 @@
+// V9, sparse indexes, skipping in the middle iter values those that have close to 0% frequencies in the output, thus minimizing the number of iterations
+// Intel
+// dart compile exe mandelbrot_parallel.dart - Avg: 14.2ms, StdDev: 21.2049%
+
 // V8, aproximating known regions with cicrles, sum 78312740
 // M1 Pro
 // dart mandelbrot_parallel.dart - Avg: 24.0ms, StdDev: 18.7371%

@@ -2,8 +2,16 @@
 # 3.12.0 - ~45 sec, 78513425
 # 3.11.6 - ~41 sec, 78513425
 # 3.9.6  - ~67 sec, 78513425
-# For comparison, Dart VM - 0.47 sec, 78513425
+# For comparison, Dart VM - ~0.47 sec, 78513425
 #                 gcc     - ~0.25 sec, 78513381
+#
+# VMWare, Ubuntu, Intel® Core™ i5-8257U CPU @ 1.40GHz × 2
+# 3.12.0  - ~54 sec, 78513425
+# 3.11.6  - ~54 sec, 78513425
+# 3.10.12 - ~85 sec, 78513425
+# 3.9.18  - ~85 sec, 78513425
+# For comparison, Dart VM - ~0.62 sec, 78513425
+#                 gcc     - ~0.33 sec, 79394478
 
 
 import time

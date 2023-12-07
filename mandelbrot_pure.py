@@ -3,6 +3,7 @@
 # 3.11.6 - ~41 sec, 78513425
 # 3.9.6  - ~67 sec, 78513425
 # For comparison, Dart VM - 0.47 sec, 78513425
+#                 gcc     - ~0.25 sec, 78513381
 
 
 import time

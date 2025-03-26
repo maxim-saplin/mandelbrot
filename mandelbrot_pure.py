@@ -14,6 +14,7 @@
 #                 gcc     - ~0.33 sec, 79394478
 
 # 3.11.9, 13600KF OC - 33.5sec
+# 3.13.2, M4 Pro - 22.2sec
 
 
 import time

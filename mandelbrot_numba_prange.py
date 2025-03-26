@@ -3,6 +3,7 @@
 # njit(fastmath=True) - 0.64 sec, sum_result 78513473
 # njit(fastmath=False, parallel=True), prange() - 0,38 sec, sum_result  78513425
 # njit(fastmath=True, parallel=True), prange() - 0,38 sec, sum_result 78513473
+  # M4 Pro - 0.023-0.024  
   # 13600KF OC - 0.045-0.049
 
 import time

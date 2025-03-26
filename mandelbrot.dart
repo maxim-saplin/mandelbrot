@@ -1,8 +1,10 @@
 // sum 78513425
 // dart mandelbrot.dart               - 0,62 - 0,70 sec
   // M4 Pro - 0.24-0.3s
+  // 13600KF OC - 0.30-0.31s
 // dart compile exe mandelbrot.dart   - 0,42 sec
   // M4 Pro - 0.15-0.17s
+  // 13600KF OC - 0.27-0.29s
 // dart mandelbrot.dart               - Unit32List,  0,60 - 0,64 sec
 // dart mandelbrot.dart               - Unit32List,  0,44 - 0,46 sec
 //

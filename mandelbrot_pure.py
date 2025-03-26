@@ -13,6 +13,8 @@
 # For comparison, Dart VM - ~0.62 sec, 78513425
 #                 gcc     - ~0.33 sec, 79394478
 
+# 3.11.9, 13600KF OC - 33.5sec
+
 
 import time
 from math import sqrt
